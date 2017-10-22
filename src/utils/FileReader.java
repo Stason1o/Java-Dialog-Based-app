@@ -17,7 +17,7 @@ public class FileReader {
 
     public static List<PC> loadFile() {
         try{
-            File file = new File("C:\\Users\\sbogdanschi\\IdeaProjects\\DialogBasedApp1\\file.xml");
+            File file = new File("file.xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(PCs.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -33,7 +33,7 @@ public class FileReader {
 
     public static void save(PCs pcs) {
         try {
-            File file = new File("C:\\Users\\sbogdanschi\\IdeaProjects\\DialogBasedApp1\\file.xml");
+            File file = new File("file.xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(PCs.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
