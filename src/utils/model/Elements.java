@@ -23,6 +23,8 @@ public class Elements {
     final ComboBox listOfEnums = new ComboBox(FXCollections.observableArrayList(ProducerEnum.asStringList()));
     public static GridPane gridPane;
 
+    private Button clear;
+    private Button deleteObject;
     private CheckBox saveToFileCheckBox;
     private TableView<Map> table;
     private SpinnerValueFactory<Integer> powerSupplierValueFactorySpinner;
@@ -54,6 +56,9 @@ public class Elements {
     private Label label;
     private Label labelPc;
     private Label labelInfoPc;
+    private Label priceLabel;
+    private Label hddLabel;
+    private Label powerSupplyLabel;
 
     private Cpu cpu;
     private GraphicCard graphicCard;
@@ -69,6 +74,46 @@ public class Elements {
     private StackPane root;
     private Stage primaryStage;
     private Stage secondaryStage;
+
+    public Button getClear() {
+        return clear;
+    }
+
+    public void setClear(Button clear) {
+        this.clear = clear;
+    }
+
+    public Label getPriceLabel() {
+        return priceLabel;
+    }
+
+    public void setPriceLabel(Label priceLabel) {
+        this.priceLabel = priceLabel;
+    }
+
+    public Label getHddLabel() {
+        return hddLabel;
+    }
+
+    public void setHddLabel(Label hddLabel) {
+        this.hddLabel = hddLabel;
+    }
+
+    public Label getPowerSupplyLabel() {
+        return powerSupplyLabel;
+    }
+
+    public void setPowerSupplyLabel(Label powerSupplyLabel) {
+        this.powerSupplyLabel = powerSupplyLabel;
+    }
+
+    public Button getDeleteObject() {
+        return deleteObject;
+    }
+
+    public void setDeleteObject(Button deleteObject) {
+        this.deleteObject = deleteObject;
+    }
 
     public CheckBox getSaveToFileCheckBox() {
         return saveToFileCheckBox;

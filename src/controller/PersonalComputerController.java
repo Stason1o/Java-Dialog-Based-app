@@ -40,9 +40,11 @@ public class PersonalComputerController {
         setActionToListOfPc();
         setActionToSaveButton();
         setActionToLoadButton();
+        setClearAction();
+        setDeleteAction();
     }
 
-    private void setOpenCreatePcDialog(Button button, PC pc, boolean switcher){
+    private void setOpenCreatePcDialog(Button button, PC pc, boolean switcher) {
         initAction(elements.getNewCpu(), pc.getCpu(), switcher);
         initAction(elements.getNewMotherboard(), pc.getMotherboard(), switcher);
         initAction(elements.getNewGraphicCard(), pc.getGraphicCard(), switcher);
@@ -52,14 +54,17 @@ public class PersonalComputerController {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
             VBox dialogVbox = new VBox(20);
-            if(!switcher) {
+            if (!switcher) {
                 dialogVbox.getChildren().addAll(elements.getNewCpu(),
                         elements.getNewRam(),
                         elements.getNewGraphicCard(),
                         elements.getNewMotherboard(),
                         elements.getPcName(),
+                        elements.getPowerSupplyLabel(),
                         elements.getPowerSupplierSpinner(),
+                        elements.getPriceLabel(),
                         elements.getPriceSpinner(),
+                        elements.getHddLabel(),
                         elements.getHddSpinner(),
                         submitPc,
                         elements.getSaveToFileCheckBox());
@@ -69,8 +74,11 @@ public class PersonalComputerController {
                         elements.getNewGraphicCard(),
                         elements.getNewMotherboard(),
                         elements.getPcName(),
+                        elements.getPowerSupplyLabel(),
                         elements.getPowerSupplierSpinner(),
+                        elements.getPriceLabel(),
                         elements.getPriceSpinner(),
+                        elements.getHddLabel(),
                         elements.getHddSpinner(),
                         submitPc,
                         elements.getSaveToFileCheckBox());
@@ -79,7 +87,7 @@ public class PersonalComputerController {
                 elements.getPriceSpinner().getValueFactory().setValue(pc.getPrice().intValue());
                 elements.getPowerSupplierSpinner().getValueFactory().setValue(pc.getPowerSupplier());
             }
-            Scene dialogScene = new Scene(dialogVbox, 300, 500);
+            Scene dialogScene = new Scene(dialogVbox, 300, 600);
             dialog.setScene(dialogScene);
             dialog.show();
             submitSaveAction(submitPc, pc, dialog);
@@ -96,7 +104,7 @@ public class PersonalComputerController {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
             VBox dialogVbox = new VBox(20);
-            if(!switcher) {
+            if (!switcher) {
                 dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), submit, elements.getLabel());
             } else {
                 dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), submit, elements.getLabel());
@@ -155,7 +163,7 @@ public class PersonalComputerController {
                 elements.getPcs().setPcs(elements.getComputers());
                 elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
                 System.out.println(elements.getComputers());
-                if(elements.getSaveToFileCheckBox().isSelected()) {
+                if (elements.getSaveToFileCheckBox().isSelected()) {
                     FileReader.save(elements.getPcs());
                     elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
                 }
@@ -188,12 +196,14 @@ public class PersonalComputerController {
     }
 
     private void setActionToListOfPc() {
-        elements.getListOfPcNames().setOnAction(event -> {
-            System.out.println(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
-            PC localPc = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
-            elements.getTable().setItems(getPcMap(localPc));
-            setOpenEditPcDialog(elements.getEditFile(), localPc);
-        });
+        if (elements.getListOfPcNames() != null) {
+            elements.getListOfPcNames().setOnAction(event -> {
+//                System.out.println(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
+                PC localPc = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
+                elements.getTable().setItems(getPcMap(localPc));
+                setOpenEditPcDialog(elements.getEditFile(), localPc);
+            });
+        }
     }
 
     private PC getPcByPcName(final String name) {
@@ -222,6 +232,26 @@ public class PersonalComputerController {
         }
 
         return allData;
+    }
+
+    private void setClearAction() {
+        elements.getClear().setOnAction(event -> {
+            elements.setComputers(new ArrayList<>());
+            elements.getPcs().setPcs(new ArrayList<>());
+            elements.setPc(new PC());
+            elements.getViewElements().setItems(FXCollections.observableArrayList());
+            elements.getViewElements().refresh();
+            elements.getListOfPcNames().setItems(FXCollections.observableArrayList());
+            elements.getTable().setItems(FXCollections.observableArrayList());
+        });
+    }
+
+    private void setDeleteAction() {
+        elements.getDeleteObject().setOnAction(event -> {
+            PC pcByPcName = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
+            elements.getComputers().remove(pcByPcName);
+            elements.getPcs().getPcs().remove(pcByPcName);
+        });
     }
 
     private List<String> getListOfValues(PC pc) {

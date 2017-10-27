@@ -53,6 +53,8 @@ public class ElementUtils {
         elements.setSaveFile(new Button("Save"));
         elements.setLoadFile(new Button("Load file"));
         elements.setEditFile(new Button("Edit PC"));
+        elements.setDeleteObject(new Button("Delete object"));
+        elements.setClear(new Button("Clear"));
 
         Elements.setSubmit(new Button("submit"));
         Elements.setSubmitPc(new Button("submit"));
@@ -60,6 +62,9 @@ public class ElementUtils {
         elements.setLabel(new Label("Something to show"));
         elements.setLabelPc(new Label("Something to show"));
         elements.setLabelInfoPc(new Label("Something to show"));
+        elements.setHddLabel(new Label("Hdd size"));
+        elements.setPriceLabel(new Label("Price"));
+        elements.setPowerSupplyLabel(new Label("Power Supply"));
 
         elements.setProducerField(new TextField());
         elements.setModelField(new TextField());
@@ -87,7 +92,6 @@ public class ElementUtils {
         elements.getHddSpinner().setValueFactory(elements.getHddValueFactorySpinner());
         elements.getPriceSpinner().setValueFactory(elements.getPriceValueFactorySpinner());
         elements.setComputers(new ArrayList<>());
-
         elements.getHddSpinner().setEditable(true);
         elements.getPriceSpinner().setEditable(true);
         elements.getPowerSupplierSpinner().setEditable(true);
@@ -122,6 +126,8 @@ public class ElementUtils {
             ((GridPane) pane).add(elements.getLabelInfoPc(), 2, 3);
             ((GridPane) pane).add(elements.getListOfPcNames(), 2, 1);
             ((GridPane) pane).add(elements.getEditFile(), 3, 1);
+//            ((GridPane) pane).add(elements.getDeleteObject(), 3, 2);
+//            ((GridPane) pane).add(elements.getClear(), 3, 3);
         }
     }
 
