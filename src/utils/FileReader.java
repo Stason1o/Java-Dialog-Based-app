@@ -16,12 +16,12 @@ import java.util.List;
  */
 public class FileReader {
 
-    private static String PATH = "file.xml";
+    private static String PATH = "\\file.xml";
 
     public static List<PC> loadFile() {
         try{
-
-            File file = new File(PATH);
+            System.out.println(System.getProperty("user.dir"));
+            File file = new File(System.getProperty("user.dir") + PATH);
             JAXBContext jaxbContext = JAXBContext.newInstance(PCs.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();

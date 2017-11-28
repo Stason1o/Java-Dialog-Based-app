@@ -53,6 +53,7 @@ public class Elements {
     private TextField hddSize;
     private TextField price;
 
+    private Label pcNameLabel;
     private Label label;
     private Label labelPc;
     private Label labelInfoPc;
@@ -74,6 +75,14 @@ public class Elements {
     private StackPane root;
     private Stage primaryStage;
     private Stage secondaryStage;
+
+    public Label getPcNameLabel() {
+        return pcNameLabel;
+    }
+
+    public void setPcNameLabel(Label pcNameLabel) {
+        this.pcNameLabel = pcNameLabel;
+    }
 
     public Button getClear() {
         return clear;

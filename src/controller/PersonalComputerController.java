@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -59,6 +60,7 @@ public class PersonalComputerController {
                         elements.getNewRam(),
                         elements.getNewGraphicCard(),
                         elements.getNewMotherboard(),
+                        elements.getPcNameLabel(),
                         elements.getPcName(),
                         elements.getPowerSupplyLabel(),
                         elements.getPowerSupplierSpinner(),
@@ -73,6 +75,7 @@ public class PersonalComputerController {
                         elements.getNewRam(),
                         elements.getNewGraphicCard(),
                         elements.getNewMotherboard(),
+                        elements.getPcNameLabel(),
                         elements.getPcName(),
                         elements.getPowerSupplyLabel(),
                         elements.getPowerSupplierSpinner(),
@@ -87,7 +90,7 @@ public class PersonalComputerController {
                 elements.getPriceSpinner().getValueFactory().setValue(pc.getPrice().intValue());
                 elements.getPowerSupplierSpinner().getValueFactory().setValue(pc.getPowerSupplier());
             }
-            Scene dialogScene = new Scene(dialogVbox, 300, 600);
+            Scene dialogScene = new Scene(dialogVbox, 300, 650);
             dialog.setScene(dialogScene);
             dialog.show();
             submitSaveAction(submitPc, pc, dialog);
@@ -156,13 +159,14 @@ public class PersonalComputerController {
                 pc.setPrice(Double.valueOf(elements.getPriceSpinner().getValue()));
                 pc.setPowerSupplier(elements.getPowerSupplierSpinner().getValue());
                 elements.getLabelPc().setText("Submission successful");
+                System.out.println("SAVED ACTION");
                 dialog.close();
                 //                    clean(Arrays.asList(elements.getPcName(), elements.getPowerSupply(), elements.getPrice(), elements.getHddSize()));
+                elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
                 elements.getComputers().remove(elements.getComputers().stream().filter(element -> element.getPcName().equalsIgnoreCase(pc.getPcName())).findFirst().get());
                 elements.getComputers().add(pc);
                 elements.getPcs().setPcs(elements.getComputers());
-                elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
-                System.out.println(elements.getComputers());
+//                System.out.println(elements.getComputers());
                 if (elements.getSaveToFileCheckBox().isSelected()) {
                     FileReader.save(elements.getPcs());
                     elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
@@ -199,9 +203,11 @@ public class PersonalComputerController {
         if (elements.getListOfPcNames() != null) {
             elements.getListOfPcNames().setOnAction(event -> {
 //                System.out.println(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
-                PC localPc = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
-                elements.getTable().setItems(getPcMap(localPc));
-                setOpenEditPcDialog(elements.getEditFile(), localPc);
+                if (elements.getListOfPcNames().getSelectionModel().getSelectedItem() !=  null) {
+                    PC localPc = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
+                    elements.getTable().setItems(getPcMap(localPc));
+                    setOpenEditPcDialog(elements.getEditFile(), localPc);
+                }
             });
         }
     }
@@ -250,7 +256,9 @@ public class PersonalComputerController {
         elements.getDeleteObject().setOnAction(event -> {
             PC pcByPcName = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
             elements.getComputers().remove(pcByPcName);
-            elements.getPcs().getPcs().remove(pcByPcName);
+            elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+            elements.getTable().setItems(FXCollections.observableList(new ArrayList<>()));
+//            elements.getPcs().getPcs().remove(pcByPcName);
         });
     }
 

@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <pCs>
     <pc>
-        <pcName>My PC</pcName>
-        <cpu>
-            <addInfo>4590K</addInfo>
-            <model>CORE I5</model>
-            <producerEnum>INTEL</producerEnum>
-        </cpu>
-        <motherboard>
-            <addInfo>E;KDSFLSDA</addInfo>
-            <model>SLKADFK;DSA</model>
-            <producerEnum>ASUS</producerEnum>
-        </motherboard>
-        <graphicCard>
-            <addInfo>11GB</addInfo>
-            <model>1080TI</model>
-            <producerEnum>NVIDIA</producerEnum>
-        </graphicCard>
-        <ram>
-            <addInfo>FURY 16GB</addInfo>
-            <model>HYPERX</model>
-            <producerEnum>KINGSTON</producerEnum>
-        </ram>
-        <hddSize>500</hddSize>
-        <powerSupplier>600</powerSupplier>
-        <price>3500.0</price>
-    </pc>
-    <pc>
         <pcName>My PC1</pcName>
         <cpu>
             <addInfo>QWERTY</addInfo>
@@ -51,5 +25,31 @@
         <hddSize>500</hddSize>
         <powerSupplier>706</powerSupplier>
         <price>650.0</price>
+    </pc>
+    <pc>
+        <pcName>My PC</pcName>
+        <cpu>
+            <addInfo>4590K</addInfo>
+            <model>CORE I5</model>
+            <producerEnum>INTEL</producerEnum>
+        </cpu>
+        <motherboard>
+            <addInfo>E;KDSFLSDA</addInfo>
+            <model>SLKADFK;DSA</model>
+            <producerEnum>ASUS</producerEnum>
+        </motherboard>
+        <graphicCard>
+            <addInfo>11GB</addInfo>
+            <model>1080TI</model>
+            <producerEnum>NVIDIA</producerEnum>
+        </graphicCard>
+        <ram>
+            <addInfo>FURY 16GB</addInfo>
+            <model>HYPERX</model>
+            <producerEnum>KINGSTON</producerEnum>
+        </ram>
+        <hddSize>500</hddSize>
+        <powerSupplier>600</powerSupplier>
+        <price>3500.0</price>
     </pc>
 </pCs>

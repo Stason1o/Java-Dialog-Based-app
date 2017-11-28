@@ -80,6 +80,7 @@ public class ElementUtils {
         elements.setRam(new Ram());
         elements.setPc(new PC());
         elements.setPcs(new PCs());
+        elements.setPcNameLabel(new Label("Pc name"));
 
         elements.getProducerField().setPromptText("Enter producer");
         elements.getModelField().setPromptText("Enter model");
@@ -126,7 +127,7 @@ public class ElementUtils {
             ((GridPane) pane).add(elements.getLabelInfoPc(), 2, 3);
             ((GridPane) pane).add(elements.getListOfPcNames(), 2, 1);
             ((GridPane) pane).add(elements.getEditFile(), 3, 1);
-//            ((GridPane) pane).add(elements.getDeleteObject(), 3, 2);
+            ((GridPane) pane).add(elements.getDeleteObject(), 3, 2);
 //            ((GridPane) pane).add(elements.getClear(), 3, 3);
         }
     }
