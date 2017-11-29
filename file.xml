@@ -52,4 +52,30 @@
         <powerSupplier>600</powerSupplier>
         <price>3500.0</price>
     </pc>
+    <pc>
+        <pcName>NEW PC</pcName>
+        <cpu>
+            <addInfo>FWQAFRWGFDGEWADFS</addInfo>
+            <model>FHJJTRHGWE</model>
+            <producerEnum>INTEL</producerEnum>
+        </cpu>
+        <motherboard>
+            <addInfo>GFJFETDS</addInfo>
+            <model>GFHJGFHJGFJ</model>
+            <producerEnum>ASUS</producerEnum>
+        </motherboard>
+        <graphicCard>
+            <addInfo>FGJFHGFFJJFFJ</addInfo>
+            <model>GHJGFHJGHJHGJGF</model>
+            <producerEnum>NVIDIA</producerEnum>
+        </graphicCard>
+        <ram>
+            <addInfo>FSADFASDFSSSSSSSSS</addInfo>
+            <model>ADDSAFSD</model>
+            <producerEnum>KINGSTON</producerEnum>
+        </ram>
+        <hddSize>2120</hddSize>
+        <powerSupplier>200</powerSupplier>
+        <price>100.0</price>
+    </pc>
 </pCs>

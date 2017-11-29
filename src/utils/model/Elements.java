@@ -6,8 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import model.PC;
 import model.PCModels.*;
+import model.PC;
+
 import model.PCs;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class Elements {
     private Button saveFile;
     private Button loadFile;
     private Button editFile;
+    private Button createFile;
 
     private TextField producerField;
     private TextField modelField;
@@ -75,6 +77,51 @@ public class Elements {
     private StackPane root;
     private Stage primaryStage;
     private Stage secondaryStage;
+
+    private MenuBar menuBar;
+    private Menu menuFile;
+    private Menu menuEdit;
+    private Menu menuView;
+
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    public void setMenuBar(MenuBar menuBar) {
+        this.menuBar = menuBar;
+    }
+
+    public Menu getMenuFile() {
+        return menuFile;
+    }
+
+    public void setMenuFile(Menu menuFile) {
+        this.menuFile = menuFile;
+    }
+
+    public Menu getMenuEdit() {
+        return menuEdit;
+    }
+
+    public void setMenuEdit(Menu menuEdit) {
+        this.menuEdit = menuEdit;
+    }
+
+    public Menu getMenuView() {
+        return menuView;
+    }
+
+    public void setMenuView(Menu menuView) {
+        this.menuView = menuView;
+    }
+
+    public Button getCreateFile() {
+        return createFile;
+    }
+
+    public void setCreateFile(Button createFile) {
+        this.createFile = createFile;
+    }
 
     public Label getPcNameLabel() {
         return pcNameLabel;

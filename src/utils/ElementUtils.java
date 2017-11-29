@@ -10,16 +10,15 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import model.PC;
 import model.PCModels.*;
 import model.PCs;
 import utils.model.Elements;
+import model.PC;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import static utils.model.Elements.Column1MapKey;
-import static utils.model.Elements.Column2MapKey;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by sbogdanschi on 10/5/2017.
@@ -45,6 +44,7 @@ public class ElementUtils {
         Elements.setGridPane(new GridPane());
         elements.setSecondaryStage(new Stage());
 
+        elements.setCreateFile(new Button("New file"));
         elements.setCreateNewPc(new Button("Create PC"));
         elements.setNewCpu(new Button("Add/Edit CPU"));
         elements.setNewMotherboard(new Button("Add/Edit MotherBoard"));
@@ -82,8 +82,18 @@ public class ElementUtils {
         elements.setPcs(new PCs());
         elements.setPcNameLabel(new Label("Pc name"));
 
+        elements.getPc().setCpu(new Cpu());
+        elements.getPc().setGraphicCard(new GraphicCard());
+        elements.getPc().setRam(new Ram());
+        elements.getPc().setMotherboard(new Motherboard());
+
+        elements.setMenuBar(new MenuBar());
+        elements.setMenuEdit(new Menu("Edit"));
+        elements.setMenuFile(new Menu("File"));
+        elements.setMenuView(new Menu("View"));
+
         elements.getProducerField().setPromptText("Enter producer");
-        elements.getModelField().setPromptText("Enter model");
+        elements.getModelField().setPromptText("Enter java.model");
         elements.getAdditionalInfoField().setPromptText("Enter additional info");
         elements.getPcName().setPromptText("Enter pc name");
         elements.getPowerSupply().setPromptText("Enter value of power supply");
@@ -98,14 +108,19 @@ public class ElementUtils {
         elements.getPowerSupplierSpinner().setEditable(true);
 //        elements.getTable().getColumns().addAll(new TableColumn("Field"), new TableColumn("Value"));
 
-        Elements.getGridPane().setHgap(10);
-        Elements.getGridPane().setVgap(10);
-        Elements.getGridPane().setPadding(new Insets(0, 10, 0, 10));
+        elements.getMenuFile().getItems().addAll(new MenuItem("New"), new MenuItem("Open"), new MenuItem("Save"), new MenuItem("New window"));
+        elements.getMenuEdit().getItems().addAll(new MenuItem("Create PC"), new MenuItem("Edit PC"), new MenuItem("Delete current object"), new MenuItem("Save changes"));
+        elements.getMenuView().getItems().addAll(new MenuItem("Hide Table"),  new MenuItem("Default size"), new MenuItem("Resize 600x600"), new MenuItem("Resize 1000x1000"));
+        elements.getMenuBar().getMenus().setAll(elements.getMenuFile(), elements.getMenuEdit(), elements.getMenuView());
+//        Elements.getGridPane().setHgap(10);
+//        Elements.getGridPane().setVgap(10);
+        Elements.getGridPane().setPadding(new Insets(0, 0, 0, 0));
 
         setElementsToPane(Elements.getGridPane(), elements);
         setSize(elements);
 
     }
+
     public static void setSize(Elements elements) {
         elements.getNewCpu().setMinSize(100, 30);
         elements.getNewMotherboard().setMinSize(100, 30);
@@ -116,18 +131,20 @@ public class ElementUtils {
         elements.getNewMotherboard().setMaxSize(300, 300);
         elements.getNewRam().setMaxSize(300, 300);
         elements.getNewGraphicCard().setMaxSize(300, 300);
+        elements.getMenuBar().setMinSize(450, 30);
+        elements.getTable().setMinSize(300, 200);
     }
 
     public static void setElementsToPane(Pane pane, Elements elements) {
         if(pane instanceof GridPane) {
-            ((GridPane) pane).add(elements.getCreateNewPc(), 1, 1);
-            ((GridPane) pane).add(elements.getTable(), 2, 2);
-            ((GridPane) pane).add(elements.getSaveFile(), 1, 2);
+            ((GridPane) pane).add(elements.getMenuBar(), 1, 1, 3, 1);
             ((GridPane) pane).add(elements.getLoadFile(), 1, 3);
+            ((GridPane) pane).add(elements.getListOfPcNames(), 1, 2);
+            ((GridPane) pane).add(elements.getTable(), 2, 2, 2, 1);
             ((GridPane) pane).add(elements.getLabelInfoPc(), 2, 3);
-            ((GridPane) pane).add(elements.getListOfPcNames(), 2, 1);
-            ((GridPane) pane).add(elements.getEditFile(), 3, 1);
-            ((GridPane) pane).add(elements.getDeleteObject(), 3, 2);
+//            ((GridPane) pane).add(elements.getSaveFile(), 1, 2);
+//            ((GridPane) pane).add(elements.getEditFile(), 3, 1);
+//            ((GridPane) pane).add(elements.getDeleteObject(), 3, 2);
 //            ((GridPane) pane).add(elements.getClear(), 3, 3);
         }
     }
@@ -136,9 +153,9 @@ public class ElementUtils {
         TableColumn<Map, String> firstDataColumn = new TableColumn<>("Field");
         TableColumn<Map, String> secondDataColumn = new TableColumn<>("Value");
 
-        firstDataColumn.setCellValueFactory(new MapValueFactory(Column1MapKey));
+        firstDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column1MapKey));
         firstDataColumn.setMinWidth(130);
-        secondDataColumn.setCellValueFactory(new MapValueFactory(Column2MapKey));
+        secondDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column2MapKey));
         secondDataColumn.setMinWidth(130);
 
         TableView<Map> tableView = new TableView<>();
@@ -161,5 +178,10 @@ public class ElementUtils {
         secondDataColumn.setCellFactory(cellFactoryForMap);
 
         return tableView;
+    }
+
+    public static void addObjectToListOfPc(Elements elements, PC pc) {
+        elements.getComputers().add(pc);
+        elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
     }
  }

@@ -1,25 +1,33 @@
 package controller;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.PC;
+import main.AppLaunchMain;
 import model.PCModels.*;
-import utils.ControllerUtils;
+import scenes.PCScene;
 import utils.ElementUtils;
 import utils.FileReader;
 import utils.model.Elements;
 
+import model.PC;
+import utils.ControllerUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
-import static utils.model.Elements.*;
+import static utils.FileReader.loadFile;
+import static utils.FileReader.save;
 
 /**
  * Created by sbogdanschi on 9/13/2017.
@@ -34,23 +42,23 @@ public class PersonalComputerController {
         elements = new Elements();
         elementUtils.initPersonalComputerController(elements);
         initButtonActions(elements);
+        setActionsToMenuItems();
     }
 
     private void initButtonActions(Elements elements) {
-        setOpenCreatePcDialog(elements.getCreateNewPc(), elements.getPc(), false);
+        setOpenCreatePcDialog(elements.getMenuEdit().getItems().get(0), elements.getPc(), false);
         setActionToListOfPc();
         setActionToSaveButton();
         setActionToLoadButton();
         setClearAction();
-        setDeleteAction();
     }
 
-    private void setOpenCreatePcDialog(Button button, PC pc, boolean switcher) {
+    private void setOpenCreatePcDialog(MenuItem item, PC pc, boolean switcher) {
         initAction(elements.getNewCpu(), pc.getCpu(), switcher);
         initAction(elements.getNewMotherboard(), pc.getMotherboard(), switcher);
         initAction(elements.getNewGraphicCard(), pc.getGraphicCard(), switcher);
         initAction(elements.getNewRam(), pc.getRam(), switcher);
-        button.setOnAction(event -> {
+        item.setOnAction(event -> {
             final Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
@@ -68,7 +76,7 @@ public class PersonalComputerController {
                         elements.getPriceSpinner(),
                         elements.getHddLabel(),
                         elements.getHddSpinner(),
-                        submitPc,
+                        Elements.submitPc,
                         elements.getSaveToFileCheckBox());
             } else {
                 dialogVbox.getChildren().addAll(elements.getNewCpu(),
@@ -83,7 +91,7 @@ public class PersonalComputerController {
                         elements.getPriceSpinner(),
                         elements.getHddLabel(),
                         elements.getHddSpinner(),
-                        submitPc,
+                        Elements.submitPc,
                         elements.getSaveToFileCheckBox());
                 elements.getPcName().setText(pc.getPcName());
                 elements.getHddSpinner().getValueFactory().setValue(pc.getHddSize());
@@ -93,12 +101,12 @@ public class PersonalComputerController {
             Scene dialogScene = new Scene(dialogVbox, 300, 650);
             dialog.setScene(dialogScene);
             dialog.show();
-            submitSaveAction(submitPc, pc, dialog);
+            submitSaveAction(Elements.submitPc, pc, dialog);
         });
     }
 
-    private void setOpenEditPcDialog(Button button, PC pc) {
-        setOpenCreatePcDialog(button, pc, true);
+    private void setOpenEditPcDialog(MenuItem item, PC pc) {
+        setOpenCreatePcDialog(item, pc, true);
     }
 
     private void initAction(Button button, PCPart pcPart, boolean switcher) {
@@ -108,9 +116,9 @@ public class PersonalComputerController {
             dialog.initOwner(elements.getPrimaryStage());
             VBox dialogVbox = new VBox(20);
             if (!switcher) {
-                dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), submit, elements.getLabel());
+                dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), Elements.submit, elements.getLabel());
             } else {
-                dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), submit, elements.getLabel());
+                dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), Elements.submit, elements.getLabel());
                 elements.getListOfEnums().getSelectionModel().select(pcPart.getProducerEnum());
                 elements.getModelField().setText(pcPart.getModel());
                 elements.getAdditionalInfoField().setText(pcPart.getAddInfo());
@@ -121,7 +129,7 @@ public class PersonalComputerController {
             Scene dialogScene = new Scene(dialogVbox, 300, 300);
             dialog.setScene(dialogScene);
             dialog.show();
-            submitSaveAction(submit, pcPart, dialog);
+            submitSaveAction(Elements.submit, pcPart, dialog);
         });
     }
 
@@ -161,19 +169,25 @@ public class PersonalComputerController {
                 elements.getLabelPc().setText("Submission successful");
                 System.out.println("SAVED ACTION");
                 dialog.close();
-                //                    clean(Arrays.asList(elements.getPcName(), elements.getPowerSupply(), elements.getPrice(), elements.getHddSize()));
-                elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
-                elements.getComputers().remove(elements.getComputers().stream().filter(element -> element.getPcName().equalsIgnoreCase(pc.getPcName())).findFirst().get());
-                elements.getComputers().add(pc);
-                elements.getPcs().setPcs(elements.getComputers());
-//                System.out.println(elements.getComputers());
+                if (elements.getListOfPcNames().getSelectionModel().getSelectedItem() != null) {
+                    elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
+
+                } else {
+                    elements.getTable().setItems(getPcMap(pc));
+                    ElementUtils.addObjectToListOfPc(elements, pc);
+                }
+                PC pcToRemove = elements.getComputers().stream().filter(element -> element.getPcName().equalsIgnoreCase(pc.getPcName())).findFirst().orElse(null);
+                if (pcToRemove != null) {
+                    elements.getComputers().remove(pcToRemove);
+                    elements.getComputers().add(pc);
+                    elements.getPcs().setPcs(elements.getComputers());
+                }
                 if (elements.getSaveToFileCheckBox().isSelected()) {
                     FileReader.save(elements.getPcs());
                     elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
                 }
             } else {
                 System.out.println("Clear");
-                //                    clean(Arrays.asList(elements.getPcName(), elements.getPowerSupply(), elements.getPrice(), elements.getHddSize()));
                 elements.getLabelPc().setText("Not Enough values for submission");
             }
         });
@@ -202,11 +216,10 @@ public class PersonalComputerController {
     private void setActionToListOfPc() {
         if (elements.getListOfPcNames() != null) {
             elements.getListOfPcNames().setOnAction(event -> {
-//                System.out.println(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
-                if (elements.getListOfPcNames().getSelectionModel().getSelectedItem() !=  null) {
+                if (elements.getListOfPcNames().getSelectionModel().getSelectedItem() != null) {
                     PC localPc = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
                     elements.getTable().setItems(getPcMap(localPc));
-                    setOpenEditPcDialog(elements.getEditFile(), localPc);
+                    setOpenEditPcDialog(elements.getMenuEdit().getItems().get(1), localPc);
                 }
             });
         }
@@ -232,8 +245,8 @@ public class PersonalComputerController {
         List<String> listOfValues = getListOfValues(pc);
         for (int i = 0; i < 16; i++) {
             Map map = new HashMap<>();
-            map.put(Column1MapKey, listOfParams.get(i));
-            map.put(Column2MapKey, listOfValues.get(i));
+            map.put(Elements.Column1MapKey, listOfParams.get(i));
+            map.put(Elements.Column2MapKey, listOfValues.get(i));
             allData.add(map);
         }
 
@@ -252,14 +265,106 @@ public class PersonalComputerController {
         });
     }
 
-    private void setDeleteAction() {
-        elements.getDeleteObject().setOnAction(event -> {
+    private void setActionsToMenuItems() {
+        final FileChooser fileChooser = new FileChooser();
+
+        //Add action to new file
+        elements.getMenuFile().getItems().get(0).setOnAction(event -> {
+            fileChooser.setTitle("Create file");
+            File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+            try {
+                Alert alert;
+                if (file != null && file.createNewFile()) {
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Successful file creation");
+                    alert.setHeaderText("File successfully created!");
+                    alert.showAndWait();
+                } else {
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Unsuccessful file creation");
+                    alert.setHeaderText("File wasn't created!");
+                }
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        });
+
+        //Add action to open file
+        elements.getMenuFile().getItems().get(1).setOnAction(e -> {
+            fileChooser.setTitle("Open file");
+            File file = fileChooser.showOpenDialog(elements.getPrimaryStage());
+            if (file != null && isXmlType(file)) {
+                elements.setComputers(FileReader.loadFile(file));
+                if (elements.getComputers() != null) {
+                    elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+                }
+
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setHeaderText("Wrong file");
+                alert.setContentText("The selected file is not of type .xml!");
+
+                alert.showAndWait();
+            }
+        });
+
+        //Add action to save file
+        elements.getMenuFile().getItems().get(2).setOnAction(e -> {
+            fileChooser.setTitle("Save file");
+            File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+            if (file != null) {
+                elements.getPcs().setPcs(elements.getComputers());
+                FileReader.save(elements.getPcs(), file.getAbsolutePath());
+            }
+        });
+
+        //Add action to open new window
+        elements.getMenuFile().getItems().get(3).setOnAction(event -> {
+            AppLaunchMain.startApp(AppLaunchMain.mainStage);
+        });
+
+        //Add action to delete pc
+        elements.getMenuEdit().getItems().get(2).setOnAction(event -> {
             PC pcByPcName = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
             elements.getComputers().remove(pcByPcName);
             elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
             elements.getTable().setItems(FXCollections.observableList(new ArrayList<>()));
-//            elements.getPcs().getPcs().remove(pcByPcName);
         });
+
+        elements.getMenuView().getItems().get(1).setOnAction(e -> {
+            elements.getLoadFile().setMinSize(100, 30);
+            elements.getTable().setMinSize(300, 200);
+            elements.getMenuBar().setMinSize(450, 30);
+            AppLaunchMain.mainStage.setMinWidth(450);
+            AppLaunchMain.mainStage.setMinHeight(300);
+        });
+
+        elements.getMenuView().getItems().get(2).setOnAction(e -> {
+            AppLaunchMain.mainStage.setMinWidth(600);
+            AppLaunchMain.mainStage.setMinHeight(600);
+            elements.getLoadFile().setMinSize(150, 150);
+            elements.getTable().setMinSize(475, 400);
+            elements.getMenuBar().setMinSize(600, 30);
+            
+        });
+
+        elements.getMenuView().getItems().get(3).setOnAction(e -> {
+            AppLaunchMain.mainStage.setMinWidth(1000);
+            AppLaunchMain.mainStage.setMinHeight(1000);
+        });
+
+    }
+
+    private boolean isXmlType(File file) {
+        String filename = file.getName();
+        String fileExtension = filename.substring(filename.indexOf('.') + 1, filename.length());
+
+        if (!fileExtension.equals("xml")) {
+            return false;
+        }
+
+        return true;
     }
 
     private List<String> getListOfValues(PC pc) {
@@ -287,16 +392,16 @@ public class PersonalComputerController {
         return Arrays.asList(
                 "Pc name",
                 "CPU producer",
-                "CPU model",
+                "CPU java.model",
                 "CPU addInfo",
                 "MotherBoard producer",
-                "MotherBoard model",
+                "MotherBoard java.model",
                 "MotherBoard addInfo",
                 "GraphicCard producer",
-                "GraphicCard model",
+                "GraphicCard java.model",
                 "GraphicCard addInfo",
                 "RAM producer",
-                "RAM model",
+                "RAM java.model",
                 "RAM addInfo",
                 "hddSize",
                 "powerSupplier",

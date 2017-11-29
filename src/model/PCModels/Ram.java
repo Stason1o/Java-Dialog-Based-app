@@ -11,7 +11,7 @@ public class Ram extends PCPart {
     public String toString() {
         final StringBuilder sb = new StringBuilder("");
         sb.append("\n\tproducer=").append(producer);
-        sb.append(", \n\tmodel='").append(model).append('\'');
+        sb.append(", \n\tjava.model='").append(model).append('\'');
         sb.append(", \n\taddInfo='").append(addInfo).append('\'');
         return sb.toString();
     }
