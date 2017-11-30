@@ -22,7 +22,7 @@ public class AppLaunchMain extends Application {
         PersonalComputerController computerController = new PersonalComputerController();
         computerController.initialize();
 
-        Scene pcScene = new PCScene(Elements.getGridPane(), 450, 300);
+        Scene pcScene = new PCScene(Elements.getGridPane(), 500, 400);
         primaryStage.setTitle("PC Maintenance");
         primaryStage.setScene(pcScene);
         primaryStage.show();

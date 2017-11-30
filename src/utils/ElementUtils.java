@@ -5,6 +5,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -44,17 +46,32 @@ public class ElementUtils {
         Elements.setGridPane(new GridPane());
         elements.setSecondaryStage(new Stage());
 
-        elements.setCreateFile(new Button("New file"));
+        elements.setNewFile(new Button());
+        elements.setCreateFile(new Button());
         elements.setCreateNewPc(new Button("Create PC"));
         elements.setNewCpu(new Button("Add/Edit CPU"));
         elements.setNewMotherboard(new Button("Add/Edit MotherBoard"));
         elements.setNewRam(new Button("Add/Edit Ram"));
         elements.setNewGraphicCard(new Button("Add/Edit Graphic card"));
-        elements.setSaveFile(new Button("Save"));
-        elements.setLoadFile(new Button("Load file"));
-        elements.setEditFile(new Button("Edit PC"));
-        elements.setDeleteObject(new Button("Delete object"));
+        elements.setSaveFile(new Button());
+        elements.setLoadFile(new Button());
+        elements.setEditFile(new Button());
+        elements.setDeleteObject(new Button());
         elements.setClear(new Button("Clear"));
+
+        Image img1 = new Image(getClass().getResourceAsStream("/resources/floppy-2.png"), 30, 30, true, true);
+        Image img2 = new Image(getClass().getResourceAsStream("/resources/open(1).jpg"), 30, 30, true, true);
+        Image img3 = new Image(getClass().getResourceAsStream("/resources/edit.png"), 30, 30, true, true);
+        Image img4 = new Image(getClass().getResourceAsStream("/resources/delete pc.png"), 30, 30, true, true);
+        Image img5 = new Image(getClass().getResourceAsStream("/resources/new_window.png"), 30, 30, true, true);
+        Image img6 = new Image(getClass().getResourceAsStream("/resources/create pc.png"), 30, 30, true, true);
+
+        elements.getSaveFile().setGraphic(new ImageView(img1));
+        elements.getLoadFile().setGraphic(new ImageView(img2));
+        elements.getEditFile().setGraphic(new ImageView(img3));
+        elements.getDeleteObject().setGraphic(new ImageView(img4));
+        elements.getNewFile().setGraphic(new ImageView(img5));
+        elements.getCreateFile().setGraphic(new ImageView(img6));
 
         Elements.setSubmit(new Button("submit"));
         Elements.setSubmitPc(new Button("submit"));
@@ -92,6 +109,8 @@ public class ElementUtils {
         elements.setMenuFile(new Menu("File"));
         elements.setMenuView(new Menu("View"));
 
+        elements.getMenuFile().getItems().addAll(new MenuItem("New"), new MenuItem("Open"), new MenuItem("Save"), new MenuItem("New window"));
+
         elements.getProducerField().setPromptText("Enter producer");
         elements.getModelField().setPromptText("Enter java.model");
         elements.getAdditionalInfoField().setPromptText("Enter additional info");
@@ -106,11 +125,20 @@ public class ElementUtils {
         elements.getHddSpinner().setEditable(true);
         elements.getPriceSpinner().setEditable(true);
         elements.getPowerSupplierSpinner().setEditable(true);
-//        elements.getTable().getColumns().addAll(new TableColumn("Field"), new TableColumn("Value"));
 
-        elements.getMenuFile().getItems().addAll(new MenuItem("New"), new MenuItem("Open"), new MenuItem("Save"), new MenuItem("New window"));
+        elements.setToolBar(new ToolBar(
+                elements.getNewFile(),
+                elements.getLoadFile(),
+                elements.getSaveFile(),
+                elements.getEditFile(),
+                elements.getCreateFile(),
+                elements.getDeleteObject(),
+                elements.getListOfPcNames()
+        ));
+
+//        elements.getTable().getColumns().addAll(new TableColumn("Field"), new TableColumn("Value"));
         elements.getMenuEdit().getItems().addAll(new MenuItem("Create PC"), new MenuItem("Edit PC"), new MenuItem("Delete current object"), new MenuItem("Save changes"));
-        elements.getMenuView().getItems().addAll(new MenuItem("Hide Table"),  new MenuItem("Default size"), new MenuItem("Resize 600x600"), new MenuItem("Resize 1000x1000"));
+        elements.getMenuView().getItems().addAll(new MenuItem("Toolbar"), new MenuItem("Default size"), new MenuItem("Resize 600x600"), new MenuItem("Resize 1000x1000"));
         elements.getMenuBar().getMenus().setAll(elements.getMenuFile(), elements.getMenuEdit(), elements.getMenuView());
 //        Elements.getGridPane().setHgap(10);
 //        Elements.getGridPane().setVgap(10);
@@ -136,12 +164,13 @@ public class ElementUtils {
     }
 
     public static void setElementsToPane(Pane pane, Elements elements) {
-        if(pane instanceof GridPane) {
+        if (pane instanceof GridPane) {
             ((GridPane) pane).add(elements.getMenuBar(), 1, 1, 3, 1);
+            ((GridPane) pane).add(elements.getToolBar(), 1, 2, 3, 1);
             ((GridPane) pane).add(elements.getLoadFile(), 1, 3);
-            ((GridPane) pane).add(elements.getListOfPcNames(), 1, 2);
-            ((GridPane) pane).add(elements.getTable(), 2, 2, 2, 1);
-            ((GridPane) pane).add(elements.getLabelInfoPc(), 2, 3);
+//            ((GridPane) pane).add(elements.getListOfPcNames(), 1, 2);
+            ((GridPane) pane).add(elements.getTable(), 1, 3, 3, 1);
+            ((GridPane) pane).add(elements.getLabelInfoPc(), 2, 4);
 //            ((GridPane) pane).add(elements.getSaveFile(), 1, 2);
 //            ((GridPane) pane).add(elements.getEditFile(), 3, 1);
 //            ((GridPane) pane).add(elements.getDeleteObject(), 3, 2);
@@ -154,9 +183,9 @@ public class ElementUtils {
         TableColumn<Map, String> secondDataColumn = new TableColumn<>("Value");
 
         firstDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column1MapKey));
-        firstDataColumn.setMinWidth(130);
+        firstDataColumn.setMinWidth(250);
         secondDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column2MapKey));
-        secondDataColumn.setMinWidth(130);
+        secondDataColumn.setMinWidth(250);
 
         TableView<Map> tableView = new TableView<>();
 
@@ -165,15 +194,16 @@ public class ElementUtils {
         tableView.getColumns().setAll(firstDataColumn, secondDataColumn);
         Callback<TableColumn<Map, String>, TableCell<Map, String>>
                 cellFactoryForMap = p -> new TextFieldTableCell(new StringConverter() {
-                    @Override
-                    public String toString(Object t) {
-                        return t.toString();
-                    }
-                    @Override
-                    public Object fromString(String string) {
-                        return string;
-                    }
-                });
+            @Override
+            public String toString(Object t) {
+                return t.toString();
+            }
+
+            @Override
+            public Object fromString(String string) {
+                return string;
+            }
+        });
         firstDataColumn.setCellFactory(cellFactoryForMap);
         secondDataColumn.setCellFactory(cellFactoryForMap);
 
@@ -184,4 +214,4 @@ public class ElementUtils {
         elements.getComputers().add(pc);
         elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
     }
- }
+}

@@ -24,6 +24,7 @@ public class Elements {
     final ComboBox listOfEnums = new ComboBox(FXCollections.observableArrayList(ProducerEnum.asStringList()));
     public static GridPane gridPane;
 
+    private ToolBar toolBar;
     private Button clear;
     private Button deleteObject;
     private CheckBox saveToFileCheckBox;
@@ -46,6 +47,8 @@ public class Elements {
     private Button loadFile;
     private Button editFile;
     private Button createFile;
+    private Button newWindow;
+    private Button newFile;
 
     private TextField producerField;
     private TextField modelField;
@@ -82,6 +85,30 @@ public class Elements {
     private Menu menuFile;
     private Menu menuEdit;
     private Menu menuView;
+
+    public Button getNewFile() {
+        return newFile;
+    }
+
+    public void setNewFile(Button newFile) {
+        this.newFile = newFile;
+    }
+
+    public Button getNewWindow() {
+        return newWindow;
+    }
+
+    public void setNewWindow(Button newWindow) {
+        this.newWindow = newWindow;
+    }
+
+    public ToolBar getToolBar() {
+        return toolBar;
+    }
+
+    public void setToolBar(ToolBar toolBar) {
+        this.toolBar = toolBar;
+    }
 
     public MenuBar getMenuBar() {
         return menuBar;

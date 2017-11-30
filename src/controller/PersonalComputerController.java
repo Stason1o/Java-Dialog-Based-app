@@ -1,19 +1,16 @@
 package controller;
 
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.AppLaunchMain;
 import model.PCModels.*;
-import scenes.PCScene;
 import utils.ElementUtils;
 import utils.FileReader;
 import utils.model.Elements;
@@ -26,8 +23,6 @@ import java.io.IOException;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
-import static utils.FileReader.loadFile;
-import static utils.FileReader.save;
 
 /**
  * Created by sbogdanschi on 9/13/2017.
@@ -313,6 +308,11 @@ public class PersonalComputerController {
         elements.getMenuFile().getItems().get(2).setOnAction(e -> {
             fileChooser.setTitle("Save file");
             File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+            if (!isXmlType(file)) {
+                file = new File(file.getName() + ".xml");
+                FileReader.save(elements.getPcs(), file.getAbsolutePath());
+            }
+
             if (file != null) {
                 elements.getPcs().setPcs(elements.getComputers());
                 FileReader.save(elements.getPcs(), file.getAbsolutePath());
@@ -332,6 +332,14 @@ public class PersonalComputerController {
             elements.getTable().setItems(FXCollections.observableList(new ArrayList<>()));
         });
 
+        elements.getMenuView().getItems().get(0).setOnAction(event -> {
+            if(elements.getToolBar().isVisible()) {
+                elements.getToolBar().setVisible(false);
+            } else {
+                elements.getToolBar().setVisible(true);
+            }
+        });
+
         elements.getMenuView().getItems().get(1).setOnAction(e -> {
             elements.getLoadFile().setMinSize(100, 30);
             elements.getTable().setMinSize(300, 200);
@@ -346,7 +354,7 @@ public class PersonalComputerController {
             elements.getLoadFile().setMinSize(150, 150);
             elements.getTable().setMinSize(475, 400);
             elements.getMenuBar().setMinSize(600, 30);
-            
+
         });
 
         elements.getMenuView().getItems().get(3).setOnAction(e -> {
