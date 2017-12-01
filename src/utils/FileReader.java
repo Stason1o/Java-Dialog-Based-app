@@ -49,26 +49,25 @@ public class FileReader {
         return null;
     }
 
-    public static void save(PCs pcs) {
+//    public static void save(PCs pcs, File file) {
+//        try {
+////            File file = new File(System.getProperty("user.dir") + PATH);
+//            JAXBContext jaxbContext = JAXBContext.newInstance(PCs.class);
+//            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+//
+//            // output pretty printed
+//            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//
+//            jaxbMarshaller.marshal(pcs, file);
+//            jaxbMarshaller.marshal(pcs, System.out);
+//
+//        } catch (JAXBException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public static void save(PCs pcs, File file) {
         try {
-            File file = new File(System.getProperty("user.dir") + PATH);
-            JAXBContext jaxbContext = JAXBContext.newInstance(PCs.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-            // output pretty printed
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            jaxbMarshaller.marshal(pcs, file);
-            jaxbMarshaller.marshal(pcs, System.out);
-
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void save(PCs pcs, String filepath) {
-        try {
-            File file = new File(filepath);
             JAXBContext jaxbContext = JAXBContext.newInstance(PCs.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 

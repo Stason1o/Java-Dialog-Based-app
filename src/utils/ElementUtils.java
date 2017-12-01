@@ -57,6 +57,8 @@ public class ElementUtils {
         elements.setLoadFile(new Button());
         elements.setEditFile(new Button());
         elements.setDeleteObject(new Button());
+        elements.setNewWindow(new Button());
+        elements.setSaveAsFile(new Button());
         elements.setClear(new Button("Clear"));
 
         Image img1 = new Image(getClass().getResourceAsStream("/resources/floppy-2.png"), 30, 30, true, true);
@@ -65,13 +67,17 @@ public class ElementUtils {
         Image img4 = new Image(getClass().getResourceAsStream("/resources/delete pc.png"), 30, 30, true, true);
         Image img5 = new Image(getClass().getResourceAsStream("/resources/new_window.png"), 30, 30, true, true);
         Image img6 = new Image(getClass().getResourceAsStream("/resources/create pc.png"), 30, 30, true, true);
+        Image img7 = new Image(getClass().getResourceAsStream("/resources/new file.png"), 30, 30, true, true);
+        Image img8 = new Image(getClass().getResourceAsStream("/resources/save as.png"), 30, 30, true, true);
 
         elements.getSaveFile().setGraphic(new ImageView(img1));
-        elements.getLoadFile().setGraphic(new ImageView(img2));
+        elements.getOpenFile().setGraphic(new ImageView(img2));
         elements.getEditFile().setGraphic(new ImageView(img3));
         elements.getDeleteObject().setGraphic(new ImageView(img4));
         elements.getNewFile().setGraphic(new ImageView(img5));
         elements.getCreateFile().setGraphic(new ImageView(img6));
+        elements.getNewWindow().setGraphic(new ImageView(img7));
+        elements.getSaveAsFile().setGraphic(new ImageView(img8));
 
         Elements.setSubmit(new Button("submit"));
         Elements.setSubmitPc(new Button("submit"));
@@ -109,7 +115,7 @@ public class ElementUtils {
         elements.setMenuFile(new Menu("File"));
         elements.setMenuView(new Menu("View"));
 
-        elements.getMenuFile().getItems().addAll(new MenuItem("New"), new MenuItem("Open"), new MenuItem("Save"), new MenuItem("New window"));
+        elements.getMenuFile().getItems().addAll(new MenuItem("New"), new MenuItem("Open"), new MenuItem("Save"), new MenuItem("Save as"), new MenuItem("New window"));
 
         elements.getProducerField().setPromptText("Enter producer");
         elements.getModelField().setPromptText("Enter java.model");
@@ -126,19 +132,31 @@ public class ElementUtils {
         elements.getPriceSpinner().setEditable(true);
         elements.getPowerSupplierSpinner().setEditable(true);
 
+        elements.getNewFile().setTooltip(new Tooltip("Create new file"));
+                elements.getNewWindow().setTooltip(new Tooltip("Create new window"));
+                elements.getOpenFile().setTooltip(new Tooltip("Open file"));
+                elements.getSaveFile().setTooltip(new Tooltip("Save file"));
+                elements.getSaveAsFile().setTooltip(new Tooltip("Save as file"));
+                elements.getCreateFile().setTooltip(new Tooltip("Create new PC"));
+                elements.getEditFile().setTooltip(new Tooltip("Edit PC"));
+                elements.getDeleteObject().setTooltip(new Tooltip("Delete current PC"));
+                elements.getListOfPcNames().setTooltip(new Tooltip("Show list of PC"));
+
         elements.setToolBar(new ToolBar(
                 elements.getNewFile(),
-                elements.getLoadFile(),
+                elements.getNewWindow(),
+                elements.getOpenFile(),
                 elements.getSaveFile(),
-                elements.getEditFile(),
+                elements.getSaveAsFile(),
                 elements.getCreateFile(),
+                elements.getEditFile(),
                 elements.getDeleteObject(),
                 elements.getListOfPcNames()
         ));
 
 //        elements.getTable().getColumns().addAll(new TableColumn("Field"), new TableColumn("Value"));
-        elements.getMenuEdit().getItems().addAll(new MenuItem("Create PC"), new MenuItem("Edit PC"), new MenuItem("Delete current object"), new MenuItem("Save changes"));
-        elements.getMenuView().getItems().addAll(new MenuItem("Toolbar"), new MenuItem("Default size"), new MenuItem("Resize 600x600"), new MenuItem("Resize 1000x1000"));
+        elements.getMenuEdit().getItems().addAll(new MenuItem("Create PC"), new MenuItem("Edit PC"), new MenuItem("Delete current object"));
+        elements.getMenuView().getItems().addAll(new MenuItem("Toolbar"));
         elements.getMenuBar().getMenus().setAll(elements.getMenuFile(), elements.getMenuEdit(), elements.getMenuView());
 //        Elements.getGridPane().setHgap(10);
 //        Elements.getGridPane().setVgap(10);
@@ -167,7 +185,7 @@ public class ElementUtils {
         if (pane instanceof GridPane) {
             ((GridPane) pane).add(elements.getMenuBar(), 1, 1, 3, 1);
             ((GridPane) pane).add(elements.getToolBar(), 1, 2, 3, 1);
-            ((GridPane) pane).add(elements.getLoadFile(), 1, 3);
+            ((GridPane) pane).add(elements.getOpenFile(), 1, 3);
 //            ((GridPane) pane).add(elements.getListOfPcNames(), 1, 2);
             ((GridPane) pane).add(elements.getTable(), 1, 3, 3, 1);
             ((GridPane) pane).add(elements.getLabelInfoPc(), 2, 4);

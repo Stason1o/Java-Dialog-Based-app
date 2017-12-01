@@ -3,6 +3,7 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -13,11 +14,13 @@ import main.AppLaunchMain;
 import model.PCModels.*;
 import utils.ElementUtils;
 import utils.FileReader;
+import utils.functionalinterface.EventListenerInterface;
 import utils.model.Elements;
 
 import model.PC;
 import utils.ControllerUtils;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -31,6 +34,7 @@ public class PersonalComputerController {
 
     private ElementUtils elementUtils;
     private Elements elements;
+    private final FileChooser fileChooser = new FileChooser();
 
     public void initialize() {
         elementUtils = new ElementUtils();
@@ -42,9 +46,10 @@ public class PersonalComputerController {
 
     private void initButtonActions(Elements elements) {
         setOpenCreatePcDialog(elements.getMenuEdit().getItems().get(0), elements.getPc(), false);
+        setOpenCreatePcDialog(elements.getCreateFile(), elements.getPc(), false);
         setActionToListOfPc();
         setActionToSaveButton();
-        setActionToLoadButton();
+//        setActionToLoadButton();
         setClearAction();
     }
 
@@ -100,8 +105,64 @@ public class PersonalComputerController {
         });
     }
 
+    private void setOpenCreatePcDialog(Button button, PC pc, boolean switcher) {
+        initAction(elements.getNewCpu(), pc.getCpu(), switcher);
+        initAction(elements.getNewMotherboard(), pc.getMotherboard(), switcher);
+        initAction(elements.getNewGraphicCard(), pc.getGraphicCard(), switcher);
+        initAction(elements.getNewRam(), pc.getRam(), switcher);
+        button.setOnAction(event -> {
+            final Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(elements.getPrimaryStage());
+            VBox dialogVbox = new VBox(20);
+            if (!switcher) {
+                dialogVbox.getChildren().addAll(elements.getNewCpu(),
+                        elements.getNewRam(),
+                        elements.getNewGraphicCard(),
+                        elements.getNewMotherboard(),
+                        elements.getPcNameLabel(),
+                        elements.getPcName(),
+                        elements.getPowerSupplyLabel(),
+                        elements.getPowerSupplierSpinner(),
+                        elements.getPriceLabel(),
+                        elements.getPriceSpinner(),
+                        elements.getHddLabel(),
+                        elements.getHddSpinner(),
+                        Elements.submitPc,
+                        elements.getSaveToFileCheckBox());
+            } else {
+                dialogVbox.getChildren().addAll(elements.getNewCpu(),
+                        elements.getNewRam(),
+                        elements.getNewGraphicCard(),
+                        elements.getNewMotherboard(),
+                        elements.getPcNameLabel(),
+                        elements.getPcName(),
+                        elements.getPowerSupplyLabel(),
+                        elements.getPowerSupplierSpinner(),
+                        elements.getPriceLabel(),
+                        elements.getPriceSpinner(),
+                        elements.getHddLabel(),
+                        elements.getHddSpinner(),
+                        Elements.submitPc,
+                        elements.getSaveToFileCheckBox());
+                elements.getPcName().setText(pc.getPcName());
+                elements.getHddSpinner().getValueFactory().setValue(pc.getHddSize());
+                elements.getPriceSpinner().getValueFactory().setValue(pc.getPrice().intValue());
+                elements.getPowerSupplierSpinner().getValueFactory().setValue(pc.getPowerSupplier());
+            }
+            Scene dialogScene = new Scene(dialogVbox, 300, 650);
+            dialog.setScene(dialogScene);
+            dialog.show();
+            submitSaveAction(Elements.submitPc, pc, dialog);
+        });
+    }
+
     private void setOpenEditPcDialog(MenuItem item, PC pc) {
         setOpenCreatePcDialog(item, pc, true);
+    }
+
+    private void setOpenEditPcDialog(Button button, PC pc) {
+        setOpenCreatePcDialog(button, pc, true);
     }
 
     private void initAction(Button button, PCPart pcPart, boolean switcher) {
@@ -178,7 +239,7 @@ public class PersonalComputerController {
                     elements.getPcs().setPcs(elements.getComputers());
                 }
                 if (elements.getSaveToFileCheckBox().isSelected()) {
-                    FileReader.save(elements.getPcs());
+                    FileReader.save(elements.getPcs(), elements.getFile());
                     elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
                 }
             } else {
@@ -194,16 +255,7 @@ public class PersonalComputerController {
                 elements.getPcs().setPcs(elements.getComputers());
             }
             if (!elements.getPcs().getPcs().isEmpty()) {
-                FileReader.save(elements.getPcs());
-            }
-        });
-    }
-
-    private void setActionToLoadButton() {
-        elements.getLoadFile().setOnAction((ActionEvent event) -> {
-            elements.setComputers(FileReader.loadFile());
-            if (elements.getComputers() != null) {
-                elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+                FileReader.save(elements.getPcs(), elements.getFile());
             }
         });
     }
@@ -215,6 +267,7 @@ public class PersonalComputerController {
                     PC localPc = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
                     elements.getTable().setItems(getPcMap(localPc));
                     setOpenEditPcDialog(elements.getMenuEdit().getItems().get(1), localPc);
+                    setOpenEditPcDialog(elements.getEditFile(), localPc);
                 }
             });
         }
@@ -261,105 +314,34 @@ public class PersonalComputerController {
     }
 
     private void setActionsToMenuItems() {
-        final FileChooser fileChooser = new FileChooser();
 
-        //Add action to new file
-        elements.getMenuFile().getItems().get(0).setOnAction(event -> {
-            fileChooser.setTitle("Create file");
-            File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
-            try {
-                Alert alert;
-                if (file != null && file.createNewFile()) {
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Successful file creation");
-                    alert.setHeaderText("File successfully created!");
-                    alert.showAndWait();
-                } else {
-                    alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Unsuccessful file creation");
-                    alert.setHeaderText("File wasn't created!");
-                }
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
-            }
-        });
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Xml doc(*.xml)", "*.xml"));
+
+        elements.getNewFile().setOnAction(this::handleCreateFileAction);
+        elements.getMenuFile().getItems().get(0).setOnAction(this::handleCreateFileAction);
 
         //Add action to open file
-        elements.getMenuFile().getItems().get(1).setOnAction(e -> {
-            fileChooser.setTitle("Open file");
-            File file = fileChooser.showOpenDialog(elements.getPrimaryStage());
-            if (file != null && isXmlType(file)) {
-                elements.setComputers(FileReader.loadFile(file));
-                if (elements.getComputers() != null) {
-                    elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
-                }
-
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Dialog");
-                alert.setHeaderText("Wrong file");
-                alert.setContentText("The selected file is not of type .xml!");
-
-                alert.showAndWait();
-            }
-        });
+        elements.getMenuFile().getItems().get(1).setOnAction(this::handleOpenFileAction);
 
         //Add action to save file
-        elements.getMenuFile().getItems().get(2).setOnAction(e -> {
-            fileChooser.setTitle("Save file");
-            File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
-            if (!isXmlType(file)) {
-                file = new File(file.getName() + ".xml");
-                FileReader.save(elements.getPcs(), file.getAbsolutePath());
-            }
+        elements.getMenuFile().getItems().get(2).setOnAction(this::handleSaveFileAction);
 
-            if (file != null) {
-                elements.getPcs().setPcs(elements.getComputers());
-                FileReader.save(elements.getPcs(), file.getAbsolutePath());
-            }
-        });
+        elements.getMenuFile().getItems().get(3).setOnAction(this::handleSaveAsFileAction);
 
         //Add action to open new window
-        elements.getMenuFile().getItems().get(3).setOnAction(event -> {
-            AppLaunchMain.startApp(AppLaunchMain.mainStage);
-        });
+        elements.getMenuFile().getItems().get(4).setOnAction(this::handleNewWindowAction);
 
         //Add action to delete pc
-        elements.getMenuEdit().getItems().get(2).setOnAction(event -> {
-            PC pcByPcName = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
-            elements.getComputers().remove(pcByPcName);
-            elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
-            elements.getTable().setItems(FXCollections.observableList(new ArrayList<>()));
-        });
+        elements.getMenuEdit().getItems().get(2).setOnAction(this::handleDeleteElementAction);
+
+        elements.getOpenFile().setOnAction(this::handleOpenFileAction);
 
         elements.getMenuView().getItems().get(0).setOnAction(event -> {
-            if(elements.getToolBar().isVisible()) {
+            if (elements.getToolBar().isVisible()) {
                 elements.getToolBar().setVisible(false);
             } else {
                 elements.getToolBar().setVisible(true);
             }
-        });
-
-        elements.getMenuView().getItems().get(1).setOnAction(e -> {
-            elements.getLoadFile().setMinSize(100, 30);
-            elements.getTable().setMinSize(300, 200);
-            elements.getMenuBar().setMinSize(450, 30);
-            AppLaunchMain.mainStage.setMinWidth(450);
-            AppLaunchMain.mainStage.setMinHeight(300);
-        });
-
-        elements.getMenuView().getItems().get(2).setOnAction(e -> {
-            AppLaunchMain.mainStage.setMinWidth(600);
-            AppLaunchMain.mainStage.setMinHeight(600);
-            elements.getLoadFile().setMinSize(150, 150);
-            elements.getTable().setMinSize(475, 400);
-            elements.getMenuBar().setMinSize(600, 30);
-
-        });
-
-        elements.getMenuView().getItems().get(3).setOnAction(e -> {
-            AppLaunchMain.mainStage.setMinWidth(1000);
-            AppLaunchMain.mainStage.setMinHeight(1000);
         });
 
     }
@@ -415,6 +397,89 @@ public class PersonalComputerController {
                 "powerSupplier",
                 "price"
         );
+    }
+
+    private void handleCreateFileAction(ActionEvent event) {
+        // Button was clicked, change color
+        fileChooser.setTitle("Create file");
+        File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+        try {
+            Alert alert;
+            if (file != null && file.createNewFile()) {
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Successful file creation");
+                alert.setHeaderText("File successfully created!");
+                alert.showAndWait();
+                elements.setFile(file);
+            } else {
+                alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Unsuccessful file creation");
+                alert.setHeaderText("File wasn't created!");
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void handleOpenFileAction(ActionEvent event) {
+        // Button was clicked, change color
+        fileChooser.setTitle("Open file");
+        File file = fileChooser.showOpenDialog(elements.getPrimaryStage());
+        if (file != null && isXmlType(file)) {
+            elements.setFile(file);
+            elements.setComputers(FileReader.loadFile(file));
+            if (elements.getComputers() != null) {
+                elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+            }
+
+        } else if (file != null && !isXmlType(file)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText("Wrong file");
+            alert.setContentText("The selected file is not of type .xml!");
+
+            alert.showAndWait();
+        }
+    }
+
+    private void handleSaveFileAction(ActionEvent event) {
+        // Button was clicked, change color
+        if (elements.getFile() != null) {
+            elements.getPcs().setPcs(elements.getComputers());
+            FileReader.save(elements.getPcs(), elements.getFile());
+        } else {
+            fileChooser.setTitle("Save file");
+            File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+            if(file != null) {
+                elements.setFile(file);
+                elements.getPcs().setPcs(elements.getComputers());
+                FileReader.save(elements.getPcs(), elements.getFile());
+            }
+        }
+    }
+
+    private void handleSaveAsFileAction(ActionEvent event) {
+        // Button was clicked, change color
+        fileChooser.setTitle("Save file as");
+        File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+
+        if (file != null) {
+            elements.getPcs().setPcs(elements.getComputers());
+            FileReader.save(elements.getPcs(), file);
+        }
+    }
+
+    private void handleNewWindowAction(ActionEvent event) {
+        // Button was clicked, change color
+        AppLaunchMain.startApp(AppLaunchMain.mainStage);
+    }
+
+    private void handleDeleteElementAction(ActionEvent event) {
+        // Button was clicked, change color
+        PC pcByPcName = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
+        elements.getComputers().remove(pcByPcName);
+        elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+        elements.getTable().setItems(FXCollections.observableList(new ArrayList<>()));
     }
 
     private static void clean(List<TextField> list) {

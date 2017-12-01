@@ -11,6 +11,7 @@ import model.PC;
 
 import model.PCs;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class Elements {
     public static final String Column2MapKey = "B";
     final ComboBox listOfEnums = new ComboBox(FXCollections.observableArrayList(ProducerEnum.asStringList()));
     public static GridPane gridPane;
+    private File file;
 
     private ToolBar toolBar;
     private Button clear;
@@ -49,6 +51,7 @@ public class Elements {
     private Button createFile;
     private Button newWindow;
     private Button newFile;
+    private Button saveAsFile;
 
     private TextField producerField;
     private TextField modelField;
@@ -85,6 +88,26 @@ public class Elements {
     private Menu menuFile;
     private Menu menuEdit;
     private Menu menuView;
+
+    public Button getLoadFile() {
+        return loadFile;
+    }
+
+    public Button getSaveAsFile() {
+        return saveAsFile;
+    }
+
+    public void setSaveAsFile(Button saveAsFile) {
+        this.saveAsFile = saveAsFile;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
 
     public Button getNewFile() {
         return newFile;
@@ -346,7 +369,7 @@ public class Elements {
         this.saveFile = saveFile;
     }
 
-    public Button getLoadFile() {
+    public Button getOpenFile() {
         return loadFile;
     }
 
