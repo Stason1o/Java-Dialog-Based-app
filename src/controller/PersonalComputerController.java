@@ -4,14 +4,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.AppLaunchMain;
 import model.PCModels.*;
+import scenes.PCScene;
 import utils.ElementUtils;
 import utils.FileReader;
 import utils.functionalinterface.EventListenerInterface;
@@ -20,10 +29,10 @@ import utils.model.Elements;
 import model.PC;
 import utils.ControllerUtils;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
@@ -59,47 +68,43 @@ public class PersonalComputerController {
         initAction(elements.getNewGraphicCard(), pc.getGraphicCard(), switcher);
         initAction(elements.getNewRam(), pc.getRam(), switcher);
         item.setOnAction(event -> {
-            final Stage dialog = new Stage();
+            Elements.getGridPane().setEffect(new GaussianBlur());
+            final Stage dialog = new Stage(StageStyle.TRANSPARENT);
+            VBox dialogVbox = new VBox(20);
+            dialogVbox.setAlignment(Pos.CENTER);
+            dialogVbox.setPadding(new Insets(35, 20 ,10, 20));
+
+            Button cancel = new Button("cancel");
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
-            VBox dialogVbox = new VBox(20);
-            if (!switcher) {
-                dialogVbox.getChildren().addAll(elements.getNewCpu(),
-                        elements.getNewRam(),
-                        elements.getNewGraphicCard(),
-                        elements.getNewMotherboard(),
-                        elements.getPcNameLabel(),
-                        elements.getPcName(),
-                        elements.getPowerSupplyLabel(),
-                        elements.getPowerSupplierSpinner(),
-                        elements.getPriceLabel(),
-                        elements.getPriceSpinner(),
-                        elements.getHddLabel(),
-                        elements.getHddSpinner(),
-                        Elements.submitPc,
-                        elements.getSaveToFileCheckBox());
-            } else {
-                dialogVbox.getChildren().addAll(elements.getNewCpu(),
-                        elements.getNewRam(),
-                        elements.getNewGraphicCard(),
-                        elements.getNewMotherboard(),
-                        elements.getPcNameLabel(),
-                        elements.getPcName(),
-                        elements.getPowerSupplyLabel(),
-                        elements.getPowerSupplierSpinner(),
-                        elements.getPriceLabel(),
-                        elements.getPriceSpinner(),
-                        elements.getHddLabel(),
-                        elements.getHddSpinner(),
-                        Elements.submitPc,
-                        elements.getSaveToFileCheckBox());
+            dialog.setScene(new Scene(dialogVbox, 300, 650));
+            cancel.setOnAction(e -> {
+                Elements.getGridPane().setEffect(null);
+                dialog.hide();
+            });
+            dialogVbox.getChildren().addAll(elements.getNewCpu(),
+                    elements.getNewRam(),
+                    elements.getNewGraphicCard(),
+                    elements.getNewMotherboard(),
+                    elements.getPcNameLabel(),
+                    elements.getPcName(),
+                    elements.getPowerSupplyLabel(),
+                    elements.getPowerSupplierSpinner(),
+                    elements.getPriceLabel(),
+                    elements.getPriceSpinner(),
+                    elements.getHddLabel(),
+                    elements.getHddSpinner(),
+                    Elements.submitPc,
+                    elements.getSaveToFileCheckBox(),
+                    cancel);
+
+            if (switcher) {
                 elements.getPcName().setText(pc.getPcName());
                 elements.getHddSpinner().getValueFactory().setValue(pc.getHddSize());
                 elements.getPriceSpinner().getValueFactory().setValue(pc.getPrice().intValue());
                 elements.getPowerSupplierSpinner().getValueFactory().setValue(pc.getPowerSupplier());
             }
-            Scene dialogScene = new Scene(dialogVbox, 300, 650);
-            dialog.setScene(dialogScene);
+
             dialog.show();
             submitSaveAction(Elements.submitPc, pc, dialog);
         });
@@ -110,48 +115,47 @@ public class PersonalComputerController {
         initAction(elements.getNewMotherboard(), pc.getMotherboard(), switcher);
         initAction(elements.getNewGraphicCard(), pc.getGraphicCard(), switcher);
         initAction(elements.getNewRam(), pc.getRam(), switcher);
+
+        Button cancel = new Button("cancel");
+
         button.setOnAction(event -> {
-            final Stage dialog = new Stage();
+            Elements.getGridPane().setEffect(new GaussianBlur());
+            final Stage dialog = new Stage(StageStyle.TRANSPARENT);
+            VBox dialogVbox = new VBox(20);
+            dialogVbox.setAlignment(Pos.CENTER);
+            dialogVbox.setPadding(new Insets(35, 20 ,10, 20));
+
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
-            VBox dialogVbox = new VBox(20);
-            if (!switcher) {
-                dialogVbox.getChildren().addAll(elements.getNewCpu(),
-                        elements.getNewRam(),
-                        elements.getNewGraphicCard(),
-                        elements.getNewMotherboard(),
-                        elements.getPcNameLabel(),
-                        elements.getPcName(),
-                        elements.getPowerSupplyLabel(),
-                        elements.getPowerSupplierSpinner(),
-                        elements.getPriceLabel(),
-                        elements.getPriceSpinner(),
-                        elements.getHddLabel(),
-                        elements.getHddSpinner(),
-                        Elements.submitPc,
-                        elements.getSaveToFileCheckBox());
-            } else {
-                dialogVbox.getChildren().addAll(elements.getNewCpu(),
-                        elements.getNewRam(),
-                        elements.getNewGraphicCard(),
-                        elements.getNewMotherboard(),
-                        elements.getPcNameLabel(),
-                        elements.getPcName(),
-                        elements.getPowerSupplyLabel(),
-                        elements.getPowerSupplierSpinner(),
-                        elements.getPriceLabel(),
-                        elements.getPriceSpinner(),
-                        elements.getHddLabel(),
-                        elements.getHddSpinner(),
-                        Elements.submitPc,
-                        elements.getSaveToFileCheckBox());
+            dialog.setScene(new Scene(dialogVbox, 300, 650));
+            dialogVbox.getChildren().addAll(elements.getNewCpu(),
+            elements.getNewRam(),
+            elements.getNewGraphicCard(),
+            elements.getNewMotherboard(),
+            elements.getPcNameLabel(),
+            elements.getPcName(),
+            elements.getPowerSupplyLabel(),
+            elements.getPowerSupplierSpinner(),
+            elements.getPriceLabel(),
+            elements.getPriceSpinner(),
+            elements.getHddLabel(),
+            elements.getHddSpinner(),
+            Elements.submitPc,
+            elements.getSaveToFileCheckBox(),
+            cancel);
+
+            if (switcher) {
                 elements.getPcName().setText(pc.getPcName());
                 elements.getHddSpinner().getValueFactory().setValue(pc.getHddSize());
                 elements.getPriceSpinner().getValueFactory().setValue(pc.getPrice().intValue());
                 elements.getPowerSupplierSpinner().getValueFactory().setValue(pc.getPowerSupplier());
             }
-            Scene dialogScene = new Scene(dialogVbox, 300, 650);
-            dialog.setScene(dialogScene);
+
+            cancel.setOnAction(e -> {
+                Elements.getGridPane().setEffect(null);
+                dialog.hide();
+            });
+
             dialog.show();
             submitSaveAction(Elements.submitPc, pc, dialog);
         });
@@ -167,14 +171,26 @@ public class PersonalComputerController {
 
     private void initAction(Button button, PCPart pcPart, boolean switcher) {
         button.setOnAction(event -> {
-            final Stage dialog = new Stage();
+            Button cancel = new Button("cancel");
+
+            Elements.getGridPane().setEffect(new GaussianBlur());
+            final Stage dialog = new Stage(StageStyle.TRANSPARENT);
+            VBox dialogVbox = new VBox(20);
+            dialogVbox.setAlignment(Pos.CENTER);
+            dialogVbox.setPadding(new Insets(10, 20 ,10, 20));
+
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
-            VBox dialogVbox = new VBox(20);
-            if (!switcher) {
-                dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), Elements.submit, elements.getLabel());
-            } else {
-                dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), Elements.submit, elements.getLabel());
+            dialog.setScene(new Scene(dialogVbox, 300, 300));
+
+            cancel.setOnAction(e -> {
+                Elements.getGridPane().setEffect(null);
+                dialog.hide();
+            });
+
+            dialogVbox.getChildren().addAll(elements.getListOfEnums(), elements.getModelField(), elements.getAdditionalInfoField(), Elements.submit, elements.getLabel(), cancel);
+
+            if (switcher) {
                 elements.getListOfEnums().getSelectionModel().select(pcPart.getProducerEnum());
                 elements.getModelField().setText(pcPart.getModel());
                 elements.getAdditionalInfoField().setText(pcPart.getAddInfo());
@@ -182,8 +198,6 @@ public class PersonalComputerController {
                 System.out.println(pcPart.getModel());
                 System.out.println(pcPart.getAddInfo());
             }
-            Scene dialogScene = new Scene(dialogVbox, 300, 300);
-            dialog.setScene(dialogScene);
             dialog.show();
             submitSaveAction(Elements.submit, pcPart, dialog);
         });
@@ -199,7 +213,8 @@ public class PersonalComputerController {
                 pcPart.setAddInfo(elements.getAdditionalInfoField().getText().toUpperCase());
                 elements.getLabel().setText("Submission successful");
                 setPcPartToMainObject(pcPart);
-                dialog.close();
+//                dialog.close();
+                dialog.hide();
                 clean(Arrays.asList(elements.getModelField(), elements.getAdditionalInfoField()));
                 System.out.println(pcPart);
                 System.out.println(elements.getPc());
@@ -225,6 +240,7 @@ public class PersonalComputerController {
                 elements.getLabelPc().setText("Submission successful");
                 System.out.println("SAVED ACTION");
                 dialog.close();
+                Elements.getGridPane().setEffect(null);
                 if (elements.getListOfPcNames().getSelectionModel().getSelectedItem() != null) {
                     elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
 
@@ -327,10 +343,10 @@ public class PersonalComputerController {
         elements.getMenuFile().getItems().get(2).setOnAction(this::handleSaveFileAction);
 
         elements.getMenuFile().getItems().get(3).setOnAction(this::handleSaveAsFileAction);
-
+        elements.getSaveAsFile().setOnAction(this::handleSaveAsFileAction);
         //Add action to open new window
         elements.getMenuFile().getItems().get(4).setOnAction(this::handleNewWindowAction);
-
+        elements.getNewWindow().setOnAction(this::handleNewWindowAction);
         //Add action to delete pc
         elements.getMenuEdit().getItems().get(2).setOnAction(this::handleDeleteElementAction);
 
@@ -443,7 +459,6 @@ public class PersonalComputerController {
     }
 
     private void handleSaveFileAction(ActionEvent event) {
-        // Button was clicked, change color
         if (elements.getFile() != null) {
             elements.getPcs().setPcs(elements.getComputers());
             FileReader.save(elements.getPcs(), elements.getFile());
@@ -459,7 +474,6 @@ public class PersonalComputerController {
     }
 
     private void handleSaveAsFileAction(ActionEvent event) {
-        // Button was clicked, change color
         fileChooser.setTitle("Save file as");
         File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
 

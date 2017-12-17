@@ -11,6 +11,7 @@ import utils.model.Elements;
 public class AppLaunchMain extends Application {
 
     public static Stage mainStage;
+    public static Scene pcScene;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -22,7 +23,7 @@ public class AppLaunchMain extends Application {
         PersonalComputerController computerController = new PersonalComputerController();
         computerController.initialize();
 
-        Scene pcScene = new PCScene(Elements.getGridPane(), 500, 400);
+        pcScene = new PCScene(Elements.getGridPane(), 500, 750);
         primaryStage.setTitle("PC Maintenance");
         primaryStage.setScene(pcScene);
         primaryStage.show();

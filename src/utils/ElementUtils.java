@@ -178,7 +178,7 @@ public class ElementUtils {
         elements.getNewRam().setMaxSize(300, 300);
         elements.getNewGraphicCard().setMaxSize(300, 300);
         elements.getMenuBar().setMinSize(450, 30);
-        elements.getTable().setMinSize(300, 200);
+        elements.getTable().setMinSize(300, 500);
     }
 
     public static void setElementsToPane(Pane pane, Elements elements) {
