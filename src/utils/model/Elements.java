@@ -26,7 +26,8 @@ public class Elements {
     public static GridPane gridPane;
     private File file;
 
-    private ToolBar toolBar;
+    private ToolBar fileToolBar;
+    private ToolBar editToolBar;
     private Button clear;
     private Button deleteObject;
     private CheckBox saveToFileCheckBox;
@@ -89,6 +90,14 @@ public class Elements {
     private Menu menuEdit;
     private Menu menuView;
 
+    public ToolBar getEditToolBar() {
+        return editToolBar;
+    }
+
+    public void setEditToolBar(ToolBar editToolBar) {
+        this.editToolBar = editToolBar;
+    }
+
     public Button getLoadFile() {
         return loadFile;
     }
@@ -125,12 +134,12 @@ public class Elements {
         this.newWindow = newWindow;
     }
 
-    public ToolBar getToolBar() {
-        return toolBar;
+    public ToolBar getFileToolBar() {
+        return fileToolBar;
     }
 
-    public void setToolBar(ToolBar toolBar) {
-        this.toolBar = toolBar;
+    public void setFileToolBar(ToolBar fileToolBar) {
+        this.fileToolBar = fileToolBar;
     }
 
     public MenuBar getMenuBar() {

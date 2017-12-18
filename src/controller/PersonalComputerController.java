@@ -3,13 +3,11 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
@@ -20,10 +18,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.AppLaunchMain;
 import model.PCModels.*;
-import scenes.PCScene;
 import utils.ElementUtils;
 import utils.FileReader;
-import utils.functionalinterface.EventListenerInterface;
 import utils.model.Elements;
 
 import model.PC;
@@ -77,7 +73,7 @@ public class PersonalComputerController {
             Button cancel = new Button("cancel");
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
-            dialog.setScene(new Scene(dialogVbox, 300, 650));
+            dialog.setScene(new Scene(dialogVbox, 300, 750));
             cancel.setOnAction(e -> {
                 Elements.getGridPane().setEffect(null);
                 dialog.hide();
@@ -123,11 +119,11 @@ public class PersonalComputerController {
             final Stage dialog = new Stage(StageStyle.TRANSPARENT);
             VBox dialogVbox = new VBox(20);
             dialogVbox.setAlignment(Pos.CENTER);
-            dialogVbox.setPadding(new Insets(35, 20 ,10, 20));
+            dialogVbox.setPadding(new Insets(60, 20 ,0, 20));
 
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(elements.getPrimaryStage());
-            dialog.setScene(new Scene(dialogVbox, 300, 650));
+            dialog.setScene(new Scene(dialogVbox, 300, 750));
             dialogVbox.getChildren().addAll(elements.getNewCpu(),
             elements.getNewRam(),
             elements.getNewGraphicCard(),
@@ -270,8 +266,13 @@ public class PersonalComputerController {
             if (!elements.getComputers().isEmpty()) {
                 elements.getPcs().setPcs(elements.getComputers());
             }
-            if (!elements.getPcs().getPcs().isEmpty()) {
+            if (elements.getPcs() != null && elements.getFile() != null && !elements.getPcs().getPcs().isEmpty() ) {
                 FileReader.save(elements.getPcs(), elements.getFile());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Missing file!");
+                alert.setHeaderText("Please specify target file");
+                alert.showAndWait();
             }
         });
     }
@@ -353,10 +354,12 @@ public class PersonalComputerController {
         elements.getOpenFile().setOnAction(this::handleOpenFileAction);
 
         elements.getMenuView().getItems().get(0).setOnAction(event -> {
-            if (elements.getToolBar().isVisible()) {
-                elements.getToolBar().setVisible(false);
+            if (elements.getFileToolBar().isVisible()) {
+                elements.getFileToolBar().setVisible(false);
+                elements.getEditToolBar().setVisible(false);
             } else {
-                elements.getToolBar().setVisible(true);
+                elements.getFileToolBar().setVisible(true);
+                elements.getEditToolBar().setVisible(true);
             }
         });
 
@@ -470,6 +473,12 @@ public class PersonalComputerController {
                 elements.getPcs().setPcs(elements.getComputers());
                 FileReader.save(elements.getPcs(), elements.getFile());
             }
+            else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Missing file!");
+                alert.setHeaderText("Target file is missing!");
+                alert.showAndWait();
+            }
         }
     }
 
@@ -480,6 +489,12 @@ public class PersonalComputerController {
         if (file != null) {
             elements.getPcs().setPcs(elements.getComputers());
             FileReader.save(elements.getPcs(), file);
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Missing file!");
+            alert.setHeaderText("Target file is missing!");
+            alert.showAndWait();
         }
     }
 

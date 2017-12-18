@@ -142,12 +142,15 @@ public class ElementUtils {
                 elements.getDeleteObject().setTooltip(new Tooltip("Delete current PC"));
                 elements.getListOfPcNames().setTooltip(new Tooltip("Show list of PC"));
 
-        elements.setToolBar(new ToolBar(
+        elements.setFileToolBar(new ToolBar(
                 elements.getNewFile(),
                 elements.getNewWindow(),
                 elements.getOpenFile(),
                 elements.getSaveFile(),
-                elements.getSaveAsFile(),
+                elements.getSaveAsFile()
+        ));
+
+        elements.setEditToolBar(new ToolBar(
                 elements.getCreateFile(),
                 elements.getEditFile(),
                 elements.getDeleteObject(),
@@ -178,17 +181,18 @@ public class ElementUtils {
         elements.getNewRam().setMaxSize(300, 300);
         elements.getNewGraphicCard().setMaxSize(300, 300);
         elements.getMenuBar().setMinSize(450, 30);
-        elements.getTable().setMinSize(300, 500);
+        elements.getTable().setMinSize(300, 600);
     }
 
     public static void setElementsToPane(Pane pane, Elements elements) {
         if (pane instanceof GridPane) {
             ((GridPane) pane).add(elements.getMenuBar(), 1, 1, 3, 1);
-            ((GridPane) pane).add(elements.getToolBar(), 1, 2, 3, 1);
+            ((GridPane) pane).add(elements.getFileToolBar(), 1, 2, 3, 1);
             ((GridPane) pane).add(elements.getOpenFile(), 1, 3);
 //            ((GridPane) pane).add(elements.getListOfPcNames(), 1, 2);
             ((GridPane) pane).add(elements.getTable(), 1, 3, 3, 1);
             ((GridPane) pane).add(elements.getLabelInfoPc(), 2, 4);
+            ((GridPane) pane).add(elements.getEditToolBar(), 1, 4, 3, 1);
 //            ((GridPane) pane).add(elements.getSaveFile(), 1, 2);
 //            ((GridPane) pane).add(elements.getEditFile(), 3, 1);
 //            ((GridPane) pane).add(elements.getDeleteObject(), 3, 2);
