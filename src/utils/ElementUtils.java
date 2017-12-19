@@ -200,7 +200,7 @@ public class ElementUtils {
         }
     }
 
-    private static TableView<Map> createTableView() {
+    public static TableView<Map> createTableView() {
         TableColumn<Map, String> firstDataColumn = new TableColumn<>("Field");
         TableColumn<Map, String> secondDataColumn = new TableColumn<>("Value");
 
@@ -232,8 +232,8 @@ public class ElementUtils {
         return tableView;
     }
 
-    public static void addObjectToListOfPc(Elements elements, PC pc) {
+    public static void addObjectToListOfPc(Elements elements, PC pc, ComboBox comboBox) {
         elements.getComputers().add(pc);
-        elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+        comboBox.setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
     }
 }

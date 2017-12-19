@@ -1,65 +1,153 @@
-package controller;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+package mdi;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import main.AppLaunchMain;
+import model.PC;
 import model.PCModels.*;
+import utils.ControllerUtils;
 import utils.ElementUtils;
 import utils.FileReader;
 import utils.model.Elements;
 
-import model.PC;
-import utils.ControllerUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.List;
-
 import static java.util.stream.Collectors.toList;
+import static mdi.MainApp.globalStage;
+import static utils.ElementUtils.createTableView;
 
-/**
- * Created by sbogdanschi on 9/13/2017.
- */
-public class PersonalComputerController {
+public class FXMLController implements Initializable {
 
+    public ToolBar toolBar1;
+    public ToolBar toolBar2;
+    public TableView tableView;
+    public MenuBar menuBar;
+    public Button button;
+    public MenuItem newFile;
+    public MenuItem openFile;
+    public MenuItem saveFile;
+    public MenuItem saveAsFile;
+    public MenuItem newWindow;
+    public MenuItem createPc;
+    public MenuItem deletePc;
+    public MenuItem editPc;
+    public MenuItem fileToolBar;
+    public MenuItem pcToolBar;
+    public Button newFileButton;
+    public Button openFileButton;
+    public Button saveFileButton;
+    public Button saveAsFileButton;
+    public Button newWindowFileButton;
+    public Button newPcButton;
+    public Button editPcButton;
+    public Button deletePcButton;
+    public ComboBox pcListComboBox;
+    public ListView listView;
+    public TableColumn firstDataColumn;
+    public TableColumn secondDataColumn;
     private ElementUtils elementUtils;
     private Elements elements;
-    private final FileChooser fileChooser = new FileChooser();
+    private FileChooser fileChooser;
+
+    @FXML
+    private Label label;
+
+    public FXMLController() {
+    }
+
+    @FXML
+    private void handleButtonAction(ActionEvent event) {
+        System.out.println("You clicked me!");
+        this.label.setText("Hello World!");
+    }
+
+    public void initialize(URL url, ResourceBundle rb) {
+
+//        firstDataColumn = new TableColumn<>("Field");
+//        secondDataColumn = new TableColumn<>("Value");
+
+        firstDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column1MapKey));
+        firstDataColumn.setMinWidth(250);
+        secondDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column2MapKey));
+        secondDataColumn.setMinWidth(250);
+
+//        tableView = new TableView<>();
+
+//        tableView.setEditable(true);
+        tableView.getSelectionModel().setCellSelectionEnabled(true);
+//        tableView.getColumns().setAll(firstDataColumn, secondDataColumn);
+        Callback<TableColumn<Map, String>, TableCell<Map, String>>
+                cellFactoryForMap = p -> new TextFieldTableCell(new StringConverter() {
+            @Override
+            public String toString(Object t) {
+                return t.toString();
+            }
+
+            @Override
+            public Object fromString(String string) {
+                return string;
+            }
+        });
+        firstDataColumn.setCellFactory(cellFactoryForMap);
+        secondDataColumn.setCellFactory(cellFactoryForMap);
+
+//        tableView = createTableView();
+        elementUtils = new ElementUtils();
+        elements = new Elements();
+        elementUtils.initPersonalComputerController(elements);
+        fileChooser = new FileChooser();
+        System.out.println(newFile);
+        System.out.println(elements.getPc());
+        setOpenCreatePcDialog(createPc, elements.getPc(), false);
+        setOpenCreatePcDialog(newPcButton, elements.getPc(), false);
+//        initButtonActions(elements);
+    }
 
     public void initialize() {
         elementUtils = new ElementUtils();
         elements = new Elements();
         elementUtils.initPersonalComputerController(elements);
-        initButtonActions(elements);
-        setActionsToMenuItems();
+//        initButtonActions(elements);
+//        setActionsToMenuItems();
     }
 
-    private void initButtonActions(Elements elements) {
-        setOpenCreatePcDialog(elements.getMenuEdit().getItems().get(0), elements.getPc(), false);
-        setOpenCreatePcDialog(elements.getCreateFile(), elements.getPc(), false);
-        setActionToListOfPc();
-        setActionToSaveButton();
-//        setActionToLoadButton();
-        setClearAction();
-    }
+//    private void initButtonActions(Elements elements) {
+//        setOpenCreatePcDialog(elements.getMenuEdit().getItems().get(0), elements.getPc(), false);
+//        setOpenCreatePcDialog(elements.getCreateFile(), elements.getPc(), false);
+//        setActionToListOfPc();
+//        setActionToSaveButton();
+////        setActionToLoadButton();
+//        setClearAction();
+//    }
+
+
 
     private void setOpenCreatePcDialog(MenuItem item, PC pc, boolean switcher) {
+        System.out.println(elements.getNewCpu() + "   " +  pc.getCpu());
         initAction(elements.getNewCpu(), pc.getCpu(), switcher);
         initAction(elements.getNewMotherboard(), pc.getMotherboard(), switcher);
         initAction(elements.getNewGraphicCard(), pc.getGraphicCard(), switcher);
@@ -126,20 +214,20 @@ public class PersonalComputerController {
             dialog.initOwner(elements.getPrimaryStage());
             dialog.setScene(new Scene(dialogVbox, 300, 750));
             dialogVbox.getChildren().addAll(elements.getNewCpu(),
-            elements.getNewRam(),
-            elements.getNewGraphicCard(),
-            elements.getNewMotherboard(),
-            elements.getPcNameLabel(),
-            elements.getPcName(),
-            elements.getPowerSupplyLabel(),
-            elements.getPowerSupplierSpinner(),
-            elements.getPriceLabel(),
-            elements.getPriceSpinner(),
-            elements.getHddLabel(),
-            elements.getHddSpinner(),
-            Elements.submitPc,
-            elements.getSaveToFileCheckBox(),
-            cancel);
+                    elements.getNewRam(),
+                    elements.getNewGraphicCard(),
+                    elements.getNewMotherboard(),
+                    elements.getPcNameLabel(),
+                    elements.getPcName(),
+                    elements.getPowerSupplyLabel(),
+                    elements.getPowerSupplierSpinner(),
+                    elements.getPriceLabel(),
+                    elements.getPriceSpinner(),
+                    elements.getHddLabel(),
+                    elements.getHddSpinner(),
+                    Elements.submitPc,
+                    elements.getSaveToFileCheckBox(),
+                    cancel);
 
             if (switcher) {
                 elements.getPcName().setText(pc.getPcName());
@@ -238,12 +326,12 @@ public class PersonalComputerController {
                 System.out.println("SAVED ACTION");
                 dialog.close();
                 Elements.getGridPane().setEffect(null);
-                if (elements.getListOfPcNames().getSelectionModel().getSelectedItem() != null) {
-                    elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
+                if (pcListComboBox.getSelectionModel().getSelectedItem() != null) {
+                    tableView.setItems(getPcMap(getPcByPcName(pcListComboBox.getSelectionModel().getSelectedItem().toString())));
 
                 } else {
-                    elements.getTable().setItems(getPcMap(pc));
-//                    ElementUtils.addObjectToListOfPc(elements, p);
+                    tableView.setItems(getPcMap(pc));
+                    ElementUtils.addObjectToListOfPc(elements, pc, pcListComboBox);
                 }
                 PC pcToRemove = elements.getComputers().stream().filter(element -> element.getPcName().equalsIgnoreCase(pc.getPcName())).findFirst().orElse(null);
                 if (pcToRemove != null) {
@@ -253,7 +341,7 @@ public class PersonalComputerController {
                 }
                 if (elements.getSaveToFileCheckBox().isSelected()) {
                     FileReader.save(elements.getPcs(), elements.getFile());
-                    elements.getTable().setItems(getPcMap(getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString())));
+                    tableView.setItems(getPcMap(getPcByPcName(pcListComboBox.getSelectionModel().getSelectedItem().toString())));
                 }
             } else {
                 System.out.println("Clear");
@@ -278,17 +366,22 @@ public class PersonalComputerController {
         });
     }
 
+    @FXML
     private void setActionToListOfPc() {
-        if (elements.getListOfPcNames() != null) {
-            elements.getListOfPcNames().setOnAction(event -> {
-                if (elements.getListOfPcNames().getSelectionModel().getSelectedItem() != null) {
-                    PC localPc = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
-                    elements.getTable().setItems(getPcMap(localPc));
-                    setOpenEditPcDialog(elements.getMenuEdit().getItems().get(1), localPc);
-                    setOpenEditPcDialog(elements.getEditFile(), localPc);
-                }
-            });
-        }
+        System.out.println(pcListComboBox);
+        pcListComboBox.setOnAction(event -> {
+            if (pcListComboBox.getSelectionModel().getSelectedItem() != null) {
+                System.out.println("Selected item: " + pcListComboBox.getSelectionModel().getSelectedItem());
+                PC localPc = getPcByPcName(pcListComboBox.getSelectionModel().getSelectedItem().toString());
+                System.out.println("Local pc: " + localPc);
+                tableView.setItems(getPcMap(localPc));
+                tableView.refresh();
+                tableView.getItems().forEach(System.out::println);
+                setOpenEditPcDialog(editPc, localPc);
+                setOpenEditPcDialog(editPcButton, localPc);
+            }
+        });
+
     }
 
     private PC getPcByPcName(final String name) {
@@ -324,10 +417,10 @@ public class PersonalComputerController {
             elements.setComputers(new ArrayList<>());
             elements.getPcs().setPcs(new ArrayList<>());
             elements.setPc(new PC());
-            elements.getViewElements().setItems(FXCollections.observableArrayList());
-            elements.getViewElements().refresh();
-            elements.getListOfPcNames().setItems(FXCollections.observableArrayList());
-            elements.getTable().setItems(FXCollections.observableArrayList());
+            listView.setItems(FXCollections.observableArrayList());
+            listView.refresh();
+            pcListComboBox.setItems(FXCollections.observableArrayList());
+            tableView.setItems(FXCollections.observableArrayList());
         });
     }
 
@@ -419,11 +512,11 @@ public class PersonalComputerController {
         );
     }
 
-
+    @FXML
     private void handleCreateFileAction(ActionEvent event) {
         // Button was clicked, change color
         fileChooser.setTitle("Create file");
-        File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+        File file = fileChooser.showSaveDialog(globalStage);
         try {
             Alert alert;
             if (file != null && file.createNewFile()) {
@@ -442,15 +535,17 @@ public class PersonalComputerController {
         }
     }
 
+    @FXML
     private void handleOpenFileAction(ActionEvent event) {
         // Button was clicked, change color
         fileChooser.setTitle("Open file");
-        File file = fileChooser.showOpenDialog(elements.getPrimaryStage());
+        File file = fileChooser.showOpenDialog(globalStage);
         if (file != null && isXmlType(file)) {
+            System.out.println(file);
             elements.setFile(file);
             elements.setComputers(FileReader.loadFile(file));
             if (elements.getComputers() != null) {
-                elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+                pcListComboBox.setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
             }
 
         } else if (file != null && !isXmlType(file)){
@@ -463,13 +558,14 @@ public class PersonalComputerController {
         }
     }
 
+    @FXML
     private void handleSaveFileAction(ActionEvent event) {
         if (elements.getFile() != null) {
             elements.getPcs().setPcs(elements.getComputers());
             FileReader.save(elements.getPcs(), elements.getFile());
         } else {
             fileChooser.setTitle("Save file");
-            File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+            File file = fileChooser.showSaveDialog(globalStage);
             if(file != null) {
                 elements.setFile(file);
                 elements.getPcs().setPcs(elements.getComputers());
@@ -484,9 +580,10 @@ public class PersonalComputerController {
         }
     }
 
+    @FXML
     private void handleSaveAsFileAction(ActionEvent event) {
         fileChooser.setTitle("Save file as");
-        File file = fileChooser.showSaveDialog(elements.getPrimaryStage());
+        File file = fileChooser.showSaveDialog(globalStage);
 
         if (file != null) {
             elements.getPcs().setPcs(elements.getComputers());
@@ -505,13 +602,13 @@ public class PersonalComputerController {
         AppLaunchMain.startApp(AppLaunchMain.mainStage);
     }
 
-
+    @FXML
     private void handleDeleteElementAction(ActionEvent event) {
         // Button was clicked, change color
-        PC pcByPcName = getPcByPcName(elements.getListOfPcNames().getSelectionModel().getSelectedItem().toString());
+        PC pcByPcName = getPcByPcName(pcListComboBox.getSelectionModel().getSelectedItem().toString());
         elements.getComputers().remove(pcByPcName);
-        elements.getListOfPcNames().setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
-        elements.getTable().setItems(FXCollections.observableList(new ArrayList<>()));
+        pcListComboBox.setItems(FXCollections.observableArrayList(elements.getComputers().stream().map(PC::getPcName).collect(toList())));
+        tableView.setItems(FXCollections.observableList(new ArrayList<>()));
     }
 
     private static void clean(List<TextField> list) {

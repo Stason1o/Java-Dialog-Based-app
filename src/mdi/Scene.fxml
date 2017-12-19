@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" minHeight="600" prefWidth="500" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="mdi.FXMLController">
+        <!--<Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonAction" fx:id="button"/>-->
+        <MenuBar layoutX="15" minHeight="20" minWidth="100" fx:id="menuBar">
+            <Menu text="File">
+                <MenuItem text="New" fx:id="newFile" onAction="#handleCreateFileAction"/>
+                <MenuItem text="Open" fx:id="openFile" onAction="#handleOpenFileAction"/>
+                <MenuItem text="Save" fx:id="saveFile" onAction="#handleSaveFileAction"/>
+                <MenuItem text="Save As" fx:id="saveAsFile" onAction="#handleSaveAsFileAction"/>
+            </Menu>
+            <Menu text="Edit">
+                <MenuItem text="Create PC" fx:id="createPc" />
+                <MenuItem text="Edit PC" fx:id="editPc"/>
+                <MenuItem text="Delete PC" fx:id="deletePc" onAction="#handleCreateFileAction"/>
+            </Menu>
+            <Menu text="View">
+                <MenuItem text="FileToolBar" fx:id="fileToolBar"/>
+                <MenuItem text="PcToolBar" fx:id="pcToolBar"/>
+            </Menu>
+        </MenuBar>
+    <ToolBar layoutX="15" layoutY="30" minHeight="20" minWidth="100" fx:id="toolBar1">
+        <Button text="New File" minWidth="50" minHeight="20" fx:id="newFileButton" onAction="#handleCreateFileAction"/>
+        <Button text="Open File" minWidth="50" minHeight="20" fx:id="openFileButton" onAction="#handleOpenFileAction"/>
+        <Button text="Save File" minWidth="50" minHeight="20" fx:id="saveFileButton" onAction="#handleSaveFileAction"/>
+        <Button text="Save as File" minWidth="50" minHeight="20" fx:id="saveAsFileButton" onAction="#handleSaveAsFileAction"/>
+    </ToolBar>
+    <ToolBar layoutX="15" layoutY="500" minHeight="20" minWidth="100" fx:id="toolBar2">
+        <Button text="New PC" minWidth="50" minHeight="20" fx:id="newPcButton" />
+        <Button text="Edit PC" minWidth="50" minHeight="20" fx:id="editPcButton" />
+        <Button text="Delete PC" minWidth="50" minHeight="20" fx:id="deletePcButton" onAction="#handleDeleteElementAction"/>
+        <ComboBox minHeight="20" minWidth="50" fx:id="pcListComboBox" onAction="#setActionToListOfPc"/>
+    </ToolBar>
+    <TableView layoutX="15" layoutY="100" minHeight="250" minWidth="475" fx:id="tableView">
+        <columns>
+            <TableColumn text="Field" minWidth="237" fx:id="firstDataColumn"/>
+            <TableColumn text="Value" minWidth="237" fx:id="secondDataColumn"/>
+        </columns>
+    </TableView>
+    <ListView maxHeight="0" maxWidth="0" fx:id="listView"/>
+</AnchorPane>

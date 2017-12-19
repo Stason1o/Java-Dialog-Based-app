@@ -6,3 +6,5 @@ out/
 *.MF
 target/
 !file.xml
+!root.fxml
+!Scene.fxml

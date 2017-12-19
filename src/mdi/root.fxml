@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="1000" prefWidth="1920" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="mdi.Root">
+    <children>
+        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
+        <!--<MenuBar layoutX="150" minHeight="20" minWidth="100" fx:id="menuBar">-->
+            <!--<Menu text="File">-->
+                <!--<MenuItem text="New" fx:id="newFile" onAction="#handleCreateFileAction"/>-->
+                <!--<MenuItem text="Open" fx:id="openFile" onAction="#handleOpenFileAction"/>-->
+                <!--<MenuItem text="Save" fx:id="saveFile" onAction="#handleSaveFileAction"/>-->
+                <!--<MenuItem text="Save As" fx:id="saveAsFile" onAction="#handleSaveAsFileAction"/>-->
+            <!--</Menu>-->
+            <!--<Menu text="Edit">-->
+                <!--<MenuItem text="Create PC" fx:id="createPc"/>-->
+                <!--<MenuItem text="Edit PC" fx:id="editPc"/>-->
+                <!--<MenuItem text="Delete PC" fx:id="deletePc"/>-->
+            <!--</Menu>-->
+            <!--<Menu text="View">-->
+                <!--<MenuItem text="FileToolBar" fx:id="fileToolBar" onAction="#handleFileToolBar"/>-->
+                <!--<MenuItem text="PcToolBar" fx:id="pcToolBar" onAction="#handlePcToolBar"/>-->
+            <!--</Menu>-->
+        <!--</MenuBar>-->
+        <!--<ToolBar layoutX="15" layoutY="30" minHeight="20" minWidth="100" fx:id="toolBar1">-->
+            <!--<Button text="New File" minWidth="50" minHeight="20" fx:id="newFileButton" onAction="#handleCreateFileActionButton"/>-->
+            <!--<Button text="Open File" minWidth="50" minHeight="20" fx:id="openFileButton" onAction="#handleOpenFileActionButton"/>-->
+            <!--<Button text="Save File" minWidth="50" minHeight="20" fx:id="saveFileButton" onAction="#handleSaveFileActionButton"/>-->
+            <!--<Button text="Save as File" minWidth="50" minHeight="20" fx:id="saveAsFileButton" onAction="#handleSaveAsFileActionButton"/>-->
+        <!--</ToolBar>-->
+    </children>
+</AnchorPane>
