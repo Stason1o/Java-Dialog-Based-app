@@ -21,6 +21,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -79,27 +81,42 @@ public class FXMLController implements Initializable {
     public FXMLController() {
     }
 
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        this.label.setText("Hello World!");
-    }
-
     public void initialize(URL url, ResourceBundle rb) {
 
-//        firstDataColumn = new TableColumn<>("Field");
-//        secondDataColumn = new TableColumn<>("Value");
+        Image img1 = new Image(getClass().getResourceAsStream("/resources/floppy-2.png"), 30, 30, true, true);
+        Image img2 = new Image(getClass().getResourceAsStream("/resources/open(1).jpg"), 30, 30, true, true);
+        Image img3 = new Image(getClass().getResourceAsStream("/resources/edit.png"), 30, 30, true, true);
+        Image img4 = new Image(getClass().getResourceAsStream("/resources/delete pc.png"), 30, 30, true, true);
+        Image img5 = new Image(getClass().getResourceAsStream("/resources/new_window.png"), 30, 30, true, true);
+        Image img6 = new Image(getClass().getResourceAsStream("/resources/create pc.png"), 30, 30, true, true);
+        Image img7 = new Image(getClass().getResourceAsStream("/resources/new file.png"), 30, 30, true, true);
+        Image img8 = new Image(getClass().getResourceAsStream("/resources/save as.png"), 30, 30, true, true);
+
+
+        saveFileButton = new Button();
+        openFileButton = new Button();
+        editPcButton = new Button();
+        deletePcButton = new Button();
+        newWindowFileButton = new Button();
+        newPcButton = new Button();
+        newFileButton = new Button();
+        saveAsFileButton = new Button();
+
+        saveFileButton.setGraphic(new ImageView(img1));
+        openFileButton.setGraphic(new ImageView(img2));
+        editPcButton.setGraphic(new ImageView(img3));
+        deletePcButton.setGraphic(new ImageView(img4));
+        newWindowFileButton.setGraphic(new ImageView(img5));
+        newPcButton.setGraphic(new ImageView(img6));
+        newFileButton.setGraphic(new ImageView(img7));
+        saveAsFileButton.setGraphic(new ImageView(img8));
 
         firstDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column1MapKey));
         firstDataColumn.setMinWidth(250);
         secondDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column2MapKey));
         secondDataColumn.setMinWidth(250);
 
-//        tableView = new TableView<>();
-
-//        tableView.setEditable(true);
         tableView.getSelectionModel().setCellSelectionEnabled(true);
-//        tableView.getColumns().setAll(firstDataColumn, secondDataColumn);
         Callback<TableColumn<Map, String>, TableCell<Map, String>>
                 cellFactoryForMap = p -> new TextFieldTableCell(new StringConverter() {
             @Override
@@ -120,8 +137,6 @@ public class FXMLController implements Initializable {
         elements = new Elements();
         elementUtils.initPersonalComputerController(elements);
         fileChooser = new FileChooser();
-        System.out.println(newFile);
-        System.out.println(elements.getPc());
         setOpenCreatePcDialog(createPc, elements.getPc(), false);
         setOpenCreatePcDialog(newPcButton, elements.getPc(), false);
 //        initButtonActions(elements);
@@ -144,10 +159,25 @@ public class FXMLController implements Initializable {
 //        setClearAction();
 //    }
 
+    @FXML
+    public void handleHideFileToolBar() {
+        if (toolBar1.isVisible()) {
+            toolBar1.setVisible(false);
+        } else {
+            toolBar1.setVisible(true);
+        }
+    }
 
+    @FXML
+    public void handleHidePcToolBar() {
+        if (toolBar2.isVisible()) {
+            toolBar2.setVisible(false);
+        } else {
+            toolBar2.setVisible(true);
+        }
+    }
 
     private void setOpenCreatePcDialog(MenuItem item, PC pc, boolean switcher) {
-        System.out.println(elements.getNewCpu() + "   " +  pc.getCpu());
         initAction(elements.getNewCpu(), pc.getCpu(), switcher);
         initAction(elements.getNewMotherboard(), pc.getMotherboard(), switcher);
         initAction(elements.getNewGraphicCard(), pc.getGraphicCard(), switcher);
@@ -279,9 +309,6 @@ public class FXMLController implements Initializable {
                 elements.getListOfEnums().getSelectionModel().select(pcPart.getProducerEnum());
                 elements.getModelField().setText(pcPart.getModel());
                 elements.getAdditionalInfoField().setText(pcPart.getAddInfo());
-                System.out.println(pcPart.getProducerEnum());
-                System.out.println(pcPart.getModel());
-                System.out.println(pcPart.getAddInfo());
             }
             dialog.show();
             submitSaveAction(Elements.submit, pcPart, dialog);
@@ -301,10 +328,7 @@ public class FXMLController implements Initializable {
 //                dialog.close();
                 dialog.hide();
                 clean(Arrays.asList(elements.getModelField(), elements.getAdditionalInfoField()));
-                System.out.println(pcPart);
-                System.out.println(elements.getPc());
             } else {
-                System.out.println("Clear");
                 clean(Arrays.asList(elements.getModelField(), elements.getAdditionalInfoField()));
                 elements.getLabel().setText("Not Enough values for submission");
             }
@@ -323,7 +347,6 @@ public class FXMLController implements Initializable {
                 pc.setPrice(Double.valueOf(elements.getPriceSpinner().getValue()));
                 pc.setPowerSupplier(elements.getPowerSupplierSpinner().getValue());
                 elements.getLabelPc().setText("Submission successful");
-                System.out.println("SAVED ACTION");
                 dialog.close();
                 Elements.getGridPane().setEffect(null);
                 if (pcListComboBox.getSelectionModel().getSelectedItem() != null) {
@@ -344,7 +367,6 @@ public class FXMLController implements Initializable {
                     tableView.setItems(getPcMap(getPcByPcName(pcListComboBox.getSelectionModel().getSelectedItem().toString())));
                 }
             } else {
-                System.out.println("Clear");
                 elements.getLabelPc().setText("Not Enough values for submission");
             }
         });
@@ -368,12 +390,9 @@ public class FXMLController implements Initializable {
 
     @FXML
     private void setActionToListOfPc() {
-        System.out.println(pcListComboBox);
         pcListComboBox.setOnAction(event -> {
             if (pcListComboBox.getSelectionModel().getSelectedItem() != null) {
-                System.out.println("Selected item: " + pcListComboBox.getSelectionModel().getSelectedItem());
                 PC localPc = getPcByPcName(pcListComboBox.getSelectionModel().getSelectedItem().toString());
-                System.out.println("Local pc: " + localPc);
                 tableView.setItems(getPcMap(localPc));
                 tableView.refresh();
                 tableView.getItems().forEach(System.out::println);
@@ -531,7 +550,6 @@ public class FXMLController implements Initializable {
                 alert.setHeaderText("File wasn't created!");
             }
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
         }
     }
 
@@ -541,7 +559,6 @@ public class FXMLController implements Initializable {
         fileChooser.setTitle("Open file");
         File file = fileChooser.showOpenDialog(globalStage);
         if (file != null && isXmlType(file)) {
-            System.out.println(file);
             elements.setFile(file);
             elements.setComputers(FileReader.loadFile(file));
             if (elements.getComputers() != null) {

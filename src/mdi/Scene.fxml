@@ -22,8 +22,8 @@
                 <MenuItem text="Delete PC" fx:id="deletePc" onAction="#handleCreateFileAction"/>
             </Menu>
             <Menu text="View">
-                <MenuItem text="FileToolBar" fx:id="fileToolBar"/>
-                <MenuItem text="PcToolBar" fx:id="pcToolBar"/>
+                <MenuItem text="FileToolBar" fx:id="fileToolBar" onAction="#handleHideFileToolBar"/>
+                <MenuItem text="PcToolBar" fx:id="pcToolBar" onAction="#handleHidePcToolBar"/>
             </Menu>
         </MenuBar>
     <ToolBar layoutX="15" layoutY="30" minHeight="20" minWidth="100" fx:id="toolBar1">
