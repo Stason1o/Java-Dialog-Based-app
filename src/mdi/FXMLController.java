@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import main.AppLaunchMain;
+//import main.AppLaunchMain;
 import model.PC;
 import model.PCModels.*;
 import utils.ControllerUtils;
@@ -40,7 +40,7 @@ import utils.model.Elements;
 
 import static java.util.stream.Collectors.toList;
 import static mdi.MainApp.globalStage;
-import static utils.ElementUtils.createTableView;
+//import static utils.ElementUtils.createTableView;
 
 public class FXMLController implements Initializable {
 
@@ -93,23 +93,24 @@ public class FXMLController implements Initializable {
         Image img8 = new Image(getClass().getResourceAsStream("/resources/save as.png"), 30, 30, true, true);
 
 
-        saveFileButton = new Button();
-        openFileButton = new Button();
-        editPcButton = new Button();
-        deletePcButton = new Button();
-        newWindowFileButton = new Button();
-        newPcButton = new Button();
-        newFileButton = new Button();
-        saveAsFileButton = new Button();
+//        saveFileButton = new Button();
+//        openFileButton = new Button();
+//        editPcButton = new Button();
+//        deletePcButton = new Button();
+//        newWindowFileButton = new Button();
+//        newPcButton = new Button();
+//        newFileButton = new Button();
+//        saveAsFileButton = new Button();
+//
+//        saveFileButton.setGraphic(new ImageView(img1));
+//        openFileButton.setGraphic(new ImageView(img2));
+//        editPcButton.setGraphic(new ImageView(img3));
+//        deletePcButton.setGraphic(new ImageView(img4));
+//        newWindowFileButton.setGraphic(new ImageView(img5));
+//        newPcButton.setGraphic(new ImageView(img6));
+//        newFileButton.setGraphic(new ImageView(img7));
+//        saveAsFileButton.setGraphic(new ImageView(img8));
 
-        saveFileButton.setGraphic(new ImageView(img1));
-        openFileButton.setGraphic(new ImageView(img2));
-        editPcButton.setGraphic(new ImageView(img3));
-        deletePcButton.setGraphic(new ImageView(img4));
-        newWindowFileButton.setGraphic(new ImageView(img5));
-        newPcButton.setGraphic(new ImageView(img6));
-        newFileButton.setGraphic(new ImageView(img7));
-        saveAsFileButton.setGraphic(new ImageView(img8));
 
         firstDataColumn.setCellValueFactory(new MapValueFactory(Elements.Column1MapKey));
         firstDataColumn.setMinWidth(250);
@@ -137,6 +138,7 @@ public class FXMLController implements Initializable {
         elements = new Elements();
         elementUtils.initPersonalComputerController(elements);
         fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Xml doc(*.xml)", "*.xml"));
         setOpenCreatePcDialog(createPc, elements.getPc(), false);
         setOpenCreatePcDialog(newPcButton, elements.getPc(), false);
 //        initButtonActions(elements);
@@ -459,8 +461,6 @@ public class FXMLController implements Initializable {
         elements.getMenuFile().getItems().get(3).setOnAction(this::handleSaveAsFileAction);
         elements.getSaveAsFile().setOnAction(this::handleSaveAsFileAction);
         //Add action to open new window
-        elements.getMenuFile().getItems().get(4).setOnAction(this::handleNewWindowAction);
-        elements.getNewWindow().setOnAction(this::handleNewWindowAction);
         //Add action to delete pc
         elements.getMenuEdit().getItems().get(2).setOnAction(this::handleDeleteElementAction);
 
@@ -612,11 +612,6 @@ public class FXMLController implements Initializable {
             alert.setHeaderText("Target file is missing!");
             alert.showAndWait();
         }
-    }
-
-    private void handleNewWindowAction(ActionEvent event) {
-        // Button was clicked, change color
-        AppLaunchMain.startApp(AppLaunchMain.mainStage);
     }
 
     @FXML

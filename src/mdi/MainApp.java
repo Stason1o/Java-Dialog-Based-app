@@ -8,7 +8,7 @@ package mdi;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import controller.PersonalComputerController;
+//import controller.PersonalComputerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -42,8 +42,8 @@ public class MainApp extends Application {
         Button createNewWindow = new Button("Create New Window");
         createNewWindow.setOnAction((event) -> {
             try {
-                PersonalComputerController computerController = new PersonalComputerController();
-                computerController.initialize();
+//                PersonalComputerController computerController = new PersonalComputerController();
+//                computerController.initialize();
                 MDIWindow dIWindow = new MDIWindow("" + this.i, new ImageView(), "Tilte 1", FXMLLoader.load(this.getClass().getResource("/mdi/Scene.fxml")));
                 canvas.addMDIWindow(dIWindow);
             } catch (Exception var4) {

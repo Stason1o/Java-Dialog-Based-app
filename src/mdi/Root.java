@@ -1,6 +1,6 @@
 package mdi;
 
-import controller.PersonalComputerController;
+//import controller.PersonalComputerController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -25,10 +25,10 @@ public class Root {
     public Button saveAsFileButton;
     public MenuBar menuBar;
     FXMLController fxmlController = new FXMLController();
-    PersonalComputerController computerController = new PersonalComputerController();
+//    PersonalComputerController computerController = new PersonalComputerController();
 
     {
-        computerController.initialize();
+//        computerController.initialize();
 //        fxmlController.initialize();
     }
 
